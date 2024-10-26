@@ -1,13 +1,7 @@
-import { showDashboard } from '$lib/flags';
-
-export const prerender = true;
-
 const delay = (amt: number) => new Promise(resolve => setTimeout(resolve, amt));
 
 
 export const load = async ({ fetch, params, parent, url }) => {
-
-  const dashboard = await showDashboard();
 
   const myFunction = async () => {
     await delay(1001);
@@ -16,7 +10,6 @@ export const load = async ({ fetch, params, parent, url }) => {
   }
 
   return {
-    renderDate: await myFunction(),
-    dashboard
+    renderDate: await myFunction()
   }
 }

@@ -2,8 +2,6 @@
 
   export let data;
 
-  export const prerender = false
-
 </script>
 
 <h1>Welcome to SvelteKit</h1>
