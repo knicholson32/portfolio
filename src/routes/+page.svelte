@@ -3,4 +3,8 @@
 
 </script>
 
-Test {data.value}
+{#await data.async}
+  Waiting...
+{:then}
+  Test {data.async.value}
+{/await}
