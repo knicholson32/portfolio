@@ -1,5 +1,7 @@
 import { showDashboard } from '$lib/flags';
 
+export const prerender = true;
+
 const delay = (amt: number) => new Promise(resolve => setTimeout(resolve, amt));
 
 
