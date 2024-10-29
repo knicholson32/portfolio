@@ -9,6 +9,7 @@ const config = {
 
 	kit: {
 		adapter: adapter({
+			
 			routes: {
 				include: ['/*'],
 				exclude: ['<all>']

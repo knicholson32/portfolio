@@ -1,10 +1,13 @@
 test-results
 node_modules
 
+storybook.log
+
 # Output
 .output
 .vercel
 /.svelte-kit
+/.wrangler
 /build
 
 # OS
