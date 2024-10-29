@@ -1,0 +1,3 @@
+npm ERR! Cannot read properties of null (reading 'matches')
+
+npm ERR! A complete log of this run can be found in: /Users/keenannicholson/.npm/_logs/2024-10-26T02_37_55_314Z-debug-0.log
