@@ -33,11 +33,8 @@ jobs:
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install
-    - name: Run linters
-      uses: wearerequired/lint-action@v2
-      with:
-        eslint: true
-        auto_fix: true
+    - name: Run lint
+      run: pnpm run lint
     - name: Run unit tests
       run: pnpm run test
 
