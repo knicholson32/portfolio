@@ -7,12 +7,12 @@ Welcome to my portfolio and project log! This site showcases my professional jou
 I have a lot of random projects and interests. Hopefully this will let me organize what I do just a bit better. 🚀
 
 ## Framework
-This project uses [`svelte 5`](https://svelte.dev/docs/svelte/overview) and [`sveltekit`](https://svelte.dev/docs/kit/introduction). It is prerendered and served from [`Cloudflare Pages`](https://pages.cloudflare.com/).
+This project uses [`svelte 5`](https://svelte.dev/docs/svelte/overview) and [`sveltekit`](https://svelte.dev/docs/kit/introduction). It is pre-rendered and served from [`Cloudflare Pages`](https://pages.cloudflare.com/).
 
 [Visit the production site here.](https://www.keenannicholson.com)
 
 ## Build and Deployment
-This portfolio is built with `@sveltejs/adapter-cloudflare` and deployed to [`Cloudflare Pages`](https://pages.cloudflare.com/). All routes are prerendered and statically served from `Cloudflare`.
+This portfolio is built with `@sveltejs/adapter-cloudflare` and deployed to [`Cloudflare Pages`](https://pages.cloudflare.com/). All routes are pre-rendered and statically served from `Cloudflare`.
 
 Deployments are automatically executed when pushing and during pull requests. Unit tests and E2E testing are also done automatically.
 
