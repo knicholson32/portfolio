@@ -17,6 +17,7 @@ jobs:
   # Linting and Unit Testing --------------------------
   # Only run during pushes (not pull-requests)
   lint_unit:
+    name: Run Lint and Unit Tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -41,6 +42,7 @@ jobs:
   # End to End Testing --------------------------------
   # Only run during pull requests
   e2e:
+    name: Run End-To-End Testing
     timeout-minutes: 10
     runs-on: ubuntu-latest
     if: |
@@ -74,6 +76,7 @@ jobs:
   # Run for every push, pull request, or event dispatch
   # https://github.com/cloudflare/wrangler-action
   deploy:
+    name: Deploy to Cloudflare Pages
     needs: [e2e, lint_unit]
     if: |
       always() &&
@@ -83,10 +86,9 @@ jobs:
     permissions:
       contents: read
       deployments: write
-    name: Deploy to Cloudflare Pages
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
