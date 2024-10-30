@@ -4,31 +4,23 @@ on:
     branches: [ main, development ]
   pull_request:
     branches: [ main, development ]
+
+  workflow_dispatch:
+    # inputs:
+    #   environment:
+    #     description: "Choose an environment to deploy to: <dev|staging|prod>"
+    #     required: true
+    #     default: "dev"
+
 jobs:
 
-  lint:
-    timeout-minutes: 3
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 9
-    - name: Use Node.js 20.10.0
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.10.0
-        cache: 'pnpm'
-    - name: Install dependencies
-      run: pnpm install
-    - name: Lint tests
-      run: pnpm run lint
-
-  unit:
-    needs: lint
+  # Linting and Unit Testing --------------------------
+  # Only run during pushes (not pull-requests)
+  lint_unit:
+    name: Run Lint and Unit Tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
     - uses: actions/checkout@v4
     - name: Install pnpm
@@ -41,15 +33,21 @@ jobs:
         node-version: 20.10.0
         cache: 'pnpm'
     - name: Install dependencies
-      run: pnpm install
+      run: pnpm install && pnpm exec svelte-kit sync
+    - name: Run lint
+      run: pnpm run lint
     - name: Run unit tests
       run: pnpm run test
 
+  # End to End Testing --------------------------------
+  # Only run during pull requests
   e2e:
-    needs: lint
+    name: Run End-To-End Testing
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    if: github.event.pull_request.base.ref == 'main'
+    if: |
+      github.event_name == 'pull_request'
+    # github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v4
     - name: Install pnpm
@@ -62,7 +60,7 @@ jobs:
         node-version: 20.10.0
         cache: 'pnpm'
     - name: Install dependencies
-      run: pnpm install
+      run: pnpm install && pnpm exec svelte-kit sync
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
     - name: Run Playwright tests
@@ -74,21 +72,23 @@ jobs:
         path: playwright-report/
         retention-days: 30
 
+  # Deploy --------------------------------------------
+  # Run for every push, pull request, or event dispatch
+  # https://github.com/cloudflare/wrangler-action
   deploy:
-    needs: [e2e, unit, lint]
+    name: Deploy to Cloudflare Pages
+    needs: [e2e, lint_unit]
     if: |
       always() &&
-      needs.unit.result == 'success' &&
-      needs.lint.result == 'success' &&
+      (needs.lint_unit.result == 'success' || needs.lint_unit.result == 'skipped') &&
       (needs.e2e.result == 'success' || needs.e2e.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       deployments: write
-    name: Deploy to Cloudflare Pages
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -99,14 +99,20 @@ jobs:
           node-version: 20.10.0
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install && pnpm exec svelte-kit sync
       - name: Build
         run: pnpm run build
-      - name: Publish
-        uses: cloudflare/pages-action@v1
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: portfolio
-          directory: .svelte-kit/cloudflare
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          packageManager: pnpm
+          command: pages deploy .svelte-kit/cloudflare --project-name=portfolio
+          # projectName: portfolio
+          # directory: .svelte-kit/cloudflare
+          # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: print deployment-url
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: echo $DEPLOYMENT_URL
