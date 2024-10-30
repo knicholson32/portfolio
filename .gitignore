@@ -1,12 +1,13 @@
 test-results
 node_modules
 
-storybook.log
+tests-examples
 
 # Output
 .output
 .vercel
 /.svelte-kit
+html
 /.wrangler
 /build
 
@@ -24,3 +25,6 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .env*.local
+/playwright-report/
+/blob-report/
+/playwright/.cache/
