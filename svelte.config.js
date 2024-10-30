@@ -1,4 +1,5 @@
-import adapter from '@sveltejs/adapter-cloudflare';
+import { default as auto} from '@sveltejs/adapter-auto';
+import { default as cf } from '@sveltejs/adapter-cloudflare';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -8,7 +9,7 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: adapter({
+		adapter: process.env.VITEST ? auto() : cf({
 			routes: {
 				include: ['/*'],
 				exclude: ['<all>']
