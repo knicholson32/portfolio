@@ -1,16 +1,13 @@
 name: Tests
 on:
   push:
-    branches: [ main, development ]
   pull_request:
-    branches: [ main, development ]
-
-  workflow_dispatch:
-    # inputs:
-    #   environment:
-    #     description: "Choose an environment to deploy to: <dev|staging|prod>"
-    #     required: true
-    #     default: "dev"
+  # workflow_dispatch:
+  #   inputs:
+  #     environment:
+  #       description: "Choose an environment to deploy to: <dev|staging|prod>"
+  #       required: true
+  #       default: "dev"
 
 jobs:
 
@@ -18,9 +15,9 @@ jobs:
   # Only run during pushes (not pull-requests)
   lint_unit:
     name: Run Lint and Unit Tests
+    if: github.event_name == 'push'
     timeout-minutes: 5
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     steps:
     - uses: actions/checkout@v4
     - name: Install pnpm
@@ -43,10 +40,10 @@ jobs:
   # Only run during pull requests
   e2e:
     name: Run End-To-End Testing
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
     if: |
       github.event_name == 'pull_request'
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
     # github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v4
@@ -82,6 +79,11 @@ jobs:
       always() &&
       (needs.lint_unit.result == 'success' || needs.lint_unit.result == 'skipped') &&
       (needs.e2e.result == 'success' || needs.e2e.result == 'skipped')
+    environment:
+      # https://github.com/orgs/community/discussions/56123
+      name: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}
+      # https://stackoverflow.com/questions/67385568/github-actions-how-to-dynamically-set-environment-url-based-on-deployment-step
+      url: ${{ steps.deploy.outputs.deployment-url }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -103,16 +105,16 @@ jobs:
       - name: Build
         run: pnpm run build
       - name: Deploy
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: pnpm
           command: pages deploy .svelte-kit/cloudflare --project-name=portfolio
-          # projectName: portfolio
-          # directory: .svelte-kit/cloudflare
-          # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: print deployment-url
-        env:
-          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
-        run: echo $DEPLOYMENT_URL
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: build
+          path: .svelte-kit/cloudflare
+          retention-days: 30
