@@ -36,5 +36,5 @@ src
     └─[pages]        S/C        # Actual pages and posts
 
 tests
- └─[tests]            S         # Tests that are excuted during the build process
+ └─[tests]            S         # Tests that are executed during the build process
 ```
