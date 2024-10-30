@@ -1,20 +1,28 @@
 <script lang="ts">
 
-  // /**
-  //  * @typedef {Object} Props
-  //  * @property {boolean} [primary] Is this the principal call to action on the page?
-  //  * @property {string} [backgroundColor] What background color to use
-  //  * @property {'small' | 'medium' | 'large'} [size] How large should the button be?
-  //  * @property {string} label Button contents
-  //  * @property {() => void} [onClick] The onclick event handler
-  //  */
+  interface Props {
+    backgroundColor: string;
+    label: string;
+    onClick: () => void;
 
-  export let backgroundColor: string;
-  export let label: string;
-  export let onClick: () => void;
-  
-  export let primary = false;
-  export let size: 'small' | 'medium' | 'large' = 'medium';
+    primary?: boolean;
+    size?: 'small' | 'medium' | 'large';
+  }
+
+  let { 
+    backgroundColor,
+    label,
+    onClick,
+
+    primary = false,
+    size = 'medium'
+  }: Props = $props();
+
+  export function click () {
+    console.log('Clicked!');
+    onClick();
+  }
+
 </script>
 
 <style>

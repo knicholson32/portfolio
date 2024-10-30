@@ -2,17 +2,28 @@
   import Button from "$lib/components/Button.svelte";
   import { onMount } from "svelte";
 
-  let myWords: Promise<[string, string]> = new Promise((_resolve, _reject) => {  });
+  let myWords: Promise<[string, string]> = $state(new Promise(() => { } ));
+
   const getWords = async () => {
-    myWords = new Promise((_resolve, _reject) => {  });
+    myWords = new Promise(() => {  });
     myWords = (await fetch('https://random-word-api.herokuapp.com/word?number=2')).json() as unknown as Promise<[string, string]>;
   }
 
-  export let data;
+  let { 
+    data: data,
+  } = $props();
 
   onMount(() => {
     getWords();
   });
+
+  
+  let myVariable = $state(0);
+  let myVarTimesTwo = $derived.by(() => {
+    return myVariable * 2;
+  });
+
+  $inspect(myVariable).with(console.trace);
 
 </script>
 
@@ -35,3 +46,8 @@
     {/each}
   {/await}
 </div>
+
+<br />
+
+{myVariable} {myVarTimesTwo}
+<button onclick={() => myVariable++}>Increment</button>
