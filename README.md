@@ -1,5 +1,7 @@
 # Keenan's Portfolio
-[![Main](https://github.com/knicholson32/portfolio/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/knicholson32/portfolio/actions/workflows/unit-tests.yml) [![Development](https://github.com/knicholson32/portfolio/actions/workflows/unit-tests.yml/badge.svg?branch=development)](https://github.com/knicholson32/portfolio/actions/workflows/unit-tests.yml)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fkeenannicholson.com%2F) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/knicholson32/portfolio/unit-tests.yml?branch=main&label=main)
+ ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/knicholson32/portfolio/unit-tests.yml?branch=development&label=dev)
+
 
 Welcome to my portfolio and project log! This site showcases my professional journey, highlighting key projects, personal achievements, and growth over time. Here, you’ll find detailed write-ups of the work I’ve done, from initial concept to final execution, alongside insights into the challenges faced and lessons learned.
 
