@@ -5,6 +5,8 @@ tests-examples
 
 inspiration
 
+**/*.bak
+
 # Output
 .output
 .vercel
