@@ -1,53 +1,14 @@
 <script lang="ts">
-  import Button from "$lib/components/Button.svelte";
-  import { onMount } from "svelte";
-
-  let myWords: Promise<[string, string]> = $state(new Promise(() => { } ));
-
-  const getWords = async () => {
-    myWords = new Promise(() => {  });
-    myWords = (await fetch('https://random-word-api.herokuapp.com/word?number=2')).json() as unknown as Promise<[string, string]>;
-  }
+  import Head from "$lib/components/generic/Head.svelte";
+  import { P } from '$lib/components/text-elements';
 
   let { 
     data: data,
   } = $props();
 
-  onMount(() => {
-    getWords();
-  });
-
-  
-  let myVariable = $state(0);
-  let myVarTimesTwo = $derived.by(() => {
-    return myVariable * 2;
-  });
-
-  $inspect(myVariable).with(console.trace);
-
 </script>
 
-<h1>Welcome to SvelteKit!</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
-<p>Rendered on: {data.renderDate}</p>
+<Head title="My Home Page" description="Wow!"/>
 
-
-<div class="inline-flex gap-2 items-center">
-  <Button onClick={getWords} label="New Words" backgroundColor="#ffffff" />
-  {#each data.words as word}
-    <span>{word}</span>
-  {/each}
-
-  {#await myWords}
-    <span class="text-xs text-gray-500 italic lowercase">Loading</span>
-  {:then words} 
-    {#each words as word}
-      <span class="animate-bounce">{word}</span>
-    {/each}
-  {/await}
-</div>
-
-<br />
-
-{myVariable} {myVarTimesTwo}
-<button onclick={() => myVariable++}>Increment</button>
+<P>Dev Log</P>
+<P>Rendered {data.renderDate}</P>
