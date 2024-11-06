@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "test": "eslint . && vitest run",
     "test:ui": "vitest --ui",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:all": "eslint . && vitest run && playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.2",
