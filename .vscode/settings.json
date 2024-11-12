@@ -1,0 +1,12 @@
+{
+  "files.autoGuessEncoding": true,
+  "editor.tabSize": 2,
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "**/meta.json"
+      ],
+      "url": "./src/lib/types/meta/metaSchema.json"
+    }
+  ]
+}
