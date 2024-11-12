@@ -21,23 +21,23 @@ export const loadMeta = (slug: string): MetaSchema => {
   }
 }
 
-export const loadPosts = (): { [key: string]: MetaSchema } => {
+export const loadPosts = (): { sortOrder: string[], posts: { [key: string]: MetaSchema } } => {
   console.log('Loading POSTS');
   const postDirectories = getDirectoriesSync('./src/routes/post');
 
   const posts: { [key: string]: MetaSchema } = {};
-  for (const dir of postDirectories) {
 
+  const timestamps: {slug: string, rfc3339: string}[] = [];
+
+  for (const dir of postDirectories) {
     try {
       const rawData = fs.readFileSync(`./src/routes/post/${dir}/meta.json`, 'utf8');
       try {
         const data = JSON.parse(rawData);
         if (validate(data)) {
           const meta = data as unknown as MetaSchema;
-          posts[dir] = {
-            title: meta.title,
-            description: meta.description
-          };
+          posts[dir] = meta;
+          timestamps.push({ slug: dir, rfc3339: meta.date_published });
         } else {
           throw Error(`${validate.errors === undefined || validate.errors === null ? '' : validate.errors[0].message} -> ${JSON.stringify(validate.errors)}`);
         }
@@ -49,5 +49,8 @@ export const loadPosts = (): { [key: string]: MetaSchema } => {
     }
   }
 
-  return posts;
+  return {
+    sortOrder: (timestamps.sort((a, b) => new Date(a.rfc3339).getTime() - new Date(b.rfc3339).getTime())).flatMap((v) => v.slug),
+    posts
+  }
 }

@@ -12,10 +12,11 @@ on:
 jobs:
 
   # Linting and Unit Testing --------------------------
-  # Only run during pushes (not pull-requests)
+  # Only run during pull-requests
   lint_unit:
     name: Run Lint and Unit Tests
-    if: github.event_name == 'push'
+    if: |
+      github.event_name == 'pull_request'
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -79,6 +80,8 @@ jobs:
       always() &&
       (needs.lint_unit.result == 'success' || needs.lint_unit.result == 'skipped') &&
       (needs.e2e.result == 'success' || needs.e2e.result == 'skipped')
+    env:
+      PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && 'https://www.keenannicholson.com' || 'https://development.portfolio-eic.pages.dev' }}
     environment:
       # https://github.com/orgs/community/discussions/56123
       name: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}

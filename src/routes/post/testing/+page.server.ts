@@ -1,9 +1,7 @@
 // import myGlobalState from "$lib/data/state.svelte";
 
-import { loadMeta } from "$lib/server/meta/index.js";
 
-
-export const load = async ({ fetch, route }) => {
+export const load = async ({ fetch, route, parent }) => {
 
   // myGlobalState.posts.push({
   //   slugs: ['testing'],
@@ -12,6 +10,8 @@ export const load = async ({ fetch, route }) => {
   //     description: 'des',
   //   }
   // });
+
+  const data = await parent();
 
   const getWords = async (): Promise<[string, string]> => {
     return await (await fetch('https://random-word-api.herokuapp.com/word?number=2')).json() as [string, string];
@@ -24,6 +24,6 @@ export const load = async ({ fetch, route }) => {
   return {
     renderDate: await myFunction(),
     words: await getWords(),
-    meta: loadMeta(route.id)
+    meta: data.postMeta.posts[route.id.replace('/post/', '')]
   }
 }

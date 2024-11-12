@@ -1,4 +1,13 @@
 {
-  "title": "Post Testing Portfolios",
-  "description": "Wow! this is fancy!"
+  "custom": {
+
+  },
+  "item": {
+    "id": "2024-11-post-testing-portfolio",
+    "url": "2024-11-post-testing-portfolio",
+    "title": "Post Testing Portfolios",
+    "summary": "Wow! this is fancy!",
+    "content_text": "Content text",
+    "date_published": "2024-11-11T21:34:22+00:00"
+  }
 }

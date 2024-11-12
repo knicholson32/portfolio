@@ -12,6 +12,6 @@
 
 
 
-{#each Object.keys(data.posts) as slug}
-    <a href="/post/{slug}">{data.posts[slug].title}</a> <br/>
+{#each Object.keys(data.postMeta.posts) as slug}
+    <a href="/post/{slug}">{data.postMeta.posts[slug].item.title}</a> <br/>
 {/each}

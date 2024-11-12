@@ -33,7 +33,7 @@ export const load = async ({ route, parent }) => {
     route,
     meta,
     slug,
-    posts: loadPosts(),
+    postMeta: loadPosts(),
     ...await parent()
   }
 }

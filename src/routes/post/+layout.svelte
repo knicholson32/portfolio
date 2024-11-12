@@ -1,5 +1,6 @@
 <script lang="ts">
   import Head from "$lib/components/generic/Head.svelte";
+  import OpenGraph from "$lib/components/generic/OpenGraph.svelte";
 
   let { 
     data: data,
@@ -10,7 +11,8 @@
 </script>
 
 {#if data.slug !== null && data.meta !== null}
-  <Head title={data.meta.title} description={data.meta.description}/>
+  <Head title={data.meta.item.title} description={data.meta.item.summary ?? ''}/>
+  <OpenGraph title={data.meta.item.title} description={data.meta.item.summary ?? 'No description provided.'} slug={data.slug}/>
 {/if}
 
 {@render children?.()}

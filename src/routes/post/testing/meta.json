@@ -1,4 +1,13 @@
 {
-  "title": "Basic Testing Portfolio",
-  "description": "Wow! this is fancy2!"
+  "custom": {
+
+  },
+  "item": {
+    "id": "testing",
+    "url": "testing",
+    "title": "Basic Testing Portfolio",
+    "summary": "Wow! this is fancy2!",
+    "content_text": "This is my basic content",
+    "date_published": "2024-11-12T21:34:22+00:00"
+  }
 }
