@@ -1,12 +1,12 @@
 // import { json } from '@sveltejs/kit';
 
-import { loadPosts } from "$lib/server/meta";
+// import { loadPosts } from "$lib/server/meta";
 
 export const prerender = true;
 
 export const GET = async () => {
   
-  const posts = loadPosts();
+  // const posts = loadPosts();
 
   const headers: Headers = new Headers();
   headers.append('Content-Type', 'application/feed+json');
