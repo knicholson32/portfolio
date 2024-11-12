@@ -22,6 +22,7 @@ export const loadMeta = (slug: string): MetaSchema => {
 }
 
 export const loadPosts = (): { [key: string]: MetaSchema } => {
+  console.log('Loading POSTS');
   const postDirectories = getDirectoriesSync('./src/routes/post');
 
   const posts: { [key: string]: MetaSchema } = {};
