@@ -45,7 +45,7 @@
   
   const srcsetTransform = $derived(pixelRatios.flatMap((e) => `/cdn-cgi/image/width=${sizeClass * e},format=auto,fit=${fit},gravity=${gravity}/${url.replace(/^\/|\/$/g, '')} ${e}x`).join(', '));
 
-  let srcset = $derived.by(() => PUBLIC_ENV === 'local' ? undefined : srcsetTransform);
+  let srcset = $derived.by(() => PUBLIC_ENV === 'prod' ? srcsetTransform : undefined);
   let src = $derived(getImageTransformer(url.replace(/^\/|\/$/g, ''), sizeClass, fit, gravity));
 
 </script>

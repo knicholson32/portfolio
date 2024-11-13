@@ -6,6 +6,6 @@ export const getImageTransformer = (url: string, width: number, fit: string, gra
   const srcTransform = `/cdn-cgi/image/width=${width},format=auto,fit=${fit},gravity=${gravity}/${url}`;
   const srcNoTransform = `/${url}`;
 
-  if (PUBLIC_ENV === 'local') return srcNoTransform;
-  return srcTransform;
+  if (PUBLIC_ENV === 'prod') return srcTransform;
+  return srcNoTransform;
 }
