@@ -37,7 +37,7 @@ export const loadPosts = (): { sortOrder: string[], posts: { [key: string]: Meta
         if (validate(data)) {
           const meta = data as unknown as MetaSchema;
           posts[dir] = meta;
-          timestamps.push({ slug: dir, rfc3339: meta.date_published });
+          timestamps.push({ slug: dir, rfc3339: meta.item.date_published });
         } else {
           throw Error(`${validate.errors === undefined || validate.errors === null ? '' : validate.errors[0].message} -> ${JSON.stringify(validate.errors)}`);
         }
