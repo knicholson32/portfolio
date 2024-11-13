@@ -1,13 +1,11 @@
-import { readdir, readdirSync } from 'fs'
+import { PUBLIC_ENV } from '$env/static/public';
 
 
 export const delay = (amt: number) => new Promise(resolve => setTimeout(resolve, amt));
+export const getImageTransformer = (url: string, width: number, fit: string, gravity: string) => {
+  const srcTransform = `/cdn-cgi/image/width=${width},format=auto,fit=${fit},gravity=${gravity}/${url}`;
+  const srcNoTransform = `/${url}`;
 
-
-export const getDirectories = (source: string, callback: (files: string[]) => void) =>
-  readdir(source, { withFileTypes: true }, (err, files) => {
-    if (err) throw err;
-    else callback(files.filter(dirent => dirent.isDirectory()).map(dirent => dirent.name));
-  });
-
-export const getDirectoriesSync = (source: string) => readdirSync(source, { withFileTypes: true }).filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
+  if (PUBLIC_ENV === 'prod') return srcTransform;
+  return srcNoTransform;
+}

@@ -9,6 +9,16 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
+		prerender: {
+			handleHttpError: ({ path, referrer, message }) => {
+				// ignore deliberate link to shiny 404 page
+				if (path.startsWith('/cdn-cgi/image/')) return;
+
+				// otherwise fail the build
+				console.error(message, referrer);
+				throw new Error(message);
+			}
+		},
 		adapter: process.env.VITEST ? auto() : cf({
 			routes: {
 				include: ['/*'],

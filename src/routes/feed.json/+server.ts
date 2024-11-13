@@ -22,17 +22,20 @@ export const GET = async () => {
     if (post.author === undefined) post.author = keenanrnicholson;
     post.url = `${PUBLIC_URL}/post/${post.url}`;
     items.push(post as Item);
+    if (post.image !== undefined && !post.image.startsWith('http')) {
+      post.image = `${PUBLIC_URL}/${post.image.replace(/^\/|\/$/g, '')}`;
+    }
   }
   
 
-  const test = {
+  const feed = {
     "version": "https://jsonfeed.org/version/1.1",
-    "title": "Keenan Nicholson",
+    "title": "Keenan Nicholson's Dev Log",
     "home_page_url": PUBLIC_URL,
     "feed_url": PUBLIC_URL + '/feed.json',
     "items": items
   } satisfies Feed;
 
 
-  return new Response(JSON.stringify(test), { status: 200, statusText: 'OK', headers });
+  return new Response(JSON.stringify(feed), { status: 200, statusText: 'OK', headers });
 };

@@ -1,4 +1,4 @@
-import { getDirectoriesSync } from '$lib/helpers';
+import { getDirectoriesSync } from '$lib/server/helpers';
 import { validate, type MetaSchema } from '$lib/types/meta';
 import * as fs from 'node:fs';
 
