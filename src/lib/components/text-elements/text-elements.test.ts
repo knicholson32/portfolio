@@ -24,3 +24,12 @@ test('Span (Span)', async () => {
   expect(child).toBeInTheDocument();
 
 });
+
+test('Heading (H)', async () => {
+
+  render(wrappers.H, {});
+  const h = screen.getByRole('heading');
+  const child = within(h).getByTestId('child');
+  expect(child).toBeInTheDocument();
+
+});
