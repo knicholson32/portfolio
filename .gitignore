@@ -32,3 +32,5 @@ vite.config.ts.timestamp-*
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+static/*
