@@ -81,7 +81,7 @@ jobs:
       (needs.lint_unit.result == 'success' || needs.lint_unit.result == 'skipped') &&
       (needs.e2e.result == 'success' || needs.e2e.result == 'skipped')
     env:
-      PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && 'https://www.keenannicholson.com' || 'https://development.portfolio-eic.pages.dev' }}
+      PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
     environment:
       # https://github.com/orgs/community/discussions/56123
       name: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}
