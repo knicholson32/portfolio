@@ -43,10 +43,10 @@
   })
 
   
-  const srcsetTransform = $derived(pixelRatios.flatMap((e) => `/cdn-cgi/image/width=${sizeClass * e},format=auto,fit=${fit},gravity=${gravity}/${url} ${e}x`).join(', '));
+  const srcsetTransform = $derived(pixelRatios.flatMap((e) => `/cdn-cgi/image/width=${sizeClass * e},format=auto,fit=${fit},gravity=${gravity}/${url.replace(/^\/|\/$/g, '')} ${e}x`).join(', '));
 
   let srcset = $derived.by(() => PUBLIC_ENV === 'local' ? undefined : srcsetTransform);
-  let src = $derived(getImageTransformer(url, sizeClass, fit, gravity));
+  let src = $derived(getImageTransformer(url.replace(/^\/|\/$/g, ''), sizeClass, fit, gravity));
 
 </script>
 <img

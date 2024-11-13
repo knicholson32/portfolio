@@ -23,7 +23,7 @@ export const GET = async () => {
     post.url = `${PUBLIC_URL}/post/${post.url}`;
     items.push(post as Item);
     if (post.image !== undefined && !post.image.startsWith('http')) {
-      post.image = `${PUBLIC_URL}/${post.image}`;
+      post.image = `${PUBLIC_URL}/${post.image.replace(/^\/|\/$/g, '')}`;
     }
   }
   
