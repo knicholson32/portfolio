@@ -1,9 +1,15 @@
+// import type { MetaData } from "$lib/types/meta";
 
-const myGlobalState = $state({
-  // head: {
-  //   title: 'Dev Log',
-  //   description: 'Home'
-  // }
-});
+// type State = {
+//   posts: {
+//     slugs: string[],
+//     meta: MetaData
+//   }[]
+// }
 
-export default myGlobalState;
+
+// const myGlobalState = $state({
+//   posts: []
+// } as State);
+
+// export default myGlobalState;

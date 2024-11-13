@@ -25,6 +25,6 @@ export default ts.config(
 	}
   },
   {
-    ignores: ["build/", ".svelte-kit/", "dist/", ".svelte-kit/", ".wrangler/", "html/", "tests/", "**/*.spec.ts", ".github"]
+    ignores: ["build/", ".svelte-kit/", "dist/", ".svelte-kit/", ".wrangler/", "html/", "tests/", "**/*.spec.ts", ".github", "src/lib/types/meta/schema.ts"]
   }
 );

@@ -2,7 +2,6 @@
   import Button from "$lib/components/generic/Button.svelte";
   import { onMount } from "svelte";
   import { P, Span } from '$lib/components/text-elements';
-  import Head from "$lib/components/generic/Head.svelte";
 
   let myWords: Promise<[string, string]> = $state(new Promise(() => { } ));
 
@@ -25,11 +24,10 @@
     return myVariable * 2;
   });
 
+
   // $inspect(myVariable).with(console.trace);
 
 </script>
-
-<Head title="Post Test" description="Wow2!"/>
 
 <h1>Welcome to SvelteKit!</h1>
 <p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
@@ -59,3 +57,5 @@
 <P>Test!</P>
 <P>Test!<Span>my Span</Span></P>
 <P>Test!</P>
+
+<a href="/">Home</a>
