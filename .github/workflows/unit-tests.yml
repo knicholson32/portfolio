@@ -17,6 +17,8 @@ jobs:
     name: Run Lint and Unit Tests
     if: |
       github.event_name == 'pull_request'
+    env:
+      PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -43,6 +45,8 @@ jobs:
     name: Run End-To-End Testing
     if: |
       github.event_name == 'pull_request'
+    env:
+      PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
     timeout-minutes: 10
     runs-on: ubuntu-latest
     # github.ref == 'refs/heads/master'
