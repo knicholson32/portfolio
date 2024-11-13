@@ -3,7 +3,7 @@
   import H from "$lib/components/text-elements/H.svelte";
   import P from "$lib/components/text-elements/P.svelte";
 
-  let { data: data } = $props();
+  // let { data: data } = $props();
 </script>
 
 <H>Welcome to the first testing post</H>
