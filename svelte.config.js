@@ -9,6 +9,9 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
+		prerender: {
+			
+		},
 		adapter: process.env.VITEST ? auto() : cf({
 			routes: {
 				include: ['/*'],
