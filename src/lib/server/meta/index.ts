@@ -49,7 +49,7 @@ export const loadPosts = async (): Promise<{ sortOrder: string[], posts: { [key:
         const data = _data.data as unknown as Schema.Frontmatter;
         posts[dir] = {
           frontmatter: data,
-          content: await compile(_data.file)
+          content: (await compile(_data.file)).code
         }
         timestamps.push({ slug: dir, rfc3339: data.meta.date[0] });
       } else {

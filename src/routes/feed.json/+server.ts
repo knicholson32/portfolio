@@ -51,8 +51,11 @@ export const GET = async () => {
     const slug = posts.sortOrder[i];
     const post = posts.posts[slug].frontmatter;
     const html = posts.posts[slug].content;
+    console.log('HTML', html);
     const item: Item = {
       id: slug,
+      title: post.title,
+      summary: post.summary,
       url: `${PUBLIC_URL}/post/${slug}`,
       image: !post.image.src.startsWith('http') ? `${PUBLIC_URL}/${post.image.src.replace(/^\/|\/$/g, '')}` : post.image.src,
       content_html: html,
