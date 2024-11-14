@@ -1,5 +1,5 @@
 ---
-title: Choosing Theme Colors
+title: New MD Format
 summary: >-
   Some advice on how to choose color palettes for both light and dark user themes.
 image:
