@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "davidanson.vscode-markdownlint",
+    "redhat.vscode-yaml",
+    "unifiedjs.vscode-mdx",
+    "dbaeumer.vscode-eslint",
+    "unifiedjs.vscode-remark"
+  ]
+}

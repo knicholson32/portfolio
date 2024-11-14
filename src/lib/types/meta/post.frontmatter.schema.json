@@ -1,0 +1,94 @@
+{
+  "title": "Frontmatter Format",
+  "description": "Format for frontmatter content in .md files.",
+  "type": "object",
+  "properties": {
+    "title": {
+      "description": "Plain text. Microblog items in particular may omit titles.",
+      "type": "string"
+    },
+    "summary": {
+      "description": "A plain text sentence or two describing the item. This might be presented in a timeline, for instance, where a detail view would display all of content_html or content_text.",
+      "type": "string"
+    },
+    "image": {
+      "description": "The main image for the item. This image may also appear in the content_html — if so, it's a hint to the feed reader that this is the main, featured image. Feed readers may use the image as a preview (probably resized as a thumbnail and placed in a timeline).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/image"
+        }
+      ]
+    },
+    "banner_image": {
+      "description": "The image to use as a banner. Some blogging systems (such as Medium) display a different banner image chosen to go with each post, but that image wouldn't otherwise appear in the content_html. A feed reader with a detail view may choose to show this banner image at the top of the detail view, possibly with the title overlaid.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/image"
+        }
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "The dates in yyyy-mm-dd format",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "description": "Can have any plain text values you want. Tags tend to be just one word, but they may be anything. Note: they are not the equivalent of Twitter hashtags. Some blogging systems and other feed formats call these categories.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "categories": {
+          "description": "Top-level categories for grouping on the website.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "date"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "title",
+    "summary",
+    "image",
+    "meta"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "image": {
+      "title": "Image",
+      "type": "object",
+      "properties": {
+        "src": {
+          "description": "The URL for the image, referenced locally or with a full URL to an external source.",
+          "type": "string"
+        },
+        "alt": {
+          "description": "Alt text for the image.",
+          "type": "string"
+        },
+        "attribution": {
+          "description": "Attribution for the image.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "src"
+      ],
+      "minProperties": 1,
+      "patternProperties": {},
+      "additionalProperties": false
+    }
+  }
+}
