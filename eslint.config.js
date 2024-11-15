@@ -1,30 +1,14 @@
-import js from '@eslint/js';
-import svelte from 'eslint-plugin-svelte';
-import globals from 'globals';
-import ts from 'typescript-eslint';
-
-export default [
-  js.configs.recommended,
-  ...ts.configs.recommended,
-  ...svelte.configs["flat/recommended"],
+import eslintPluginAstro from 'eslint-plugin-astro';
+const t = [
+  // add more generic rule sets here, such as:
+  // js.configs.recommended,
+  ...eslintPluginAstro.configs.recommended,
   {
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node
-      }
+    rules: {
+      // override/add rules settings here, such as:
+      // "astro/no-set-html-directive": "error"
     }
-  },
-  {
-    files: ["src/**/*.svelte"],
-
-    languageOptions: {
-      parserOptions: {
-        parser: ts.parser
-      }
-    }
-  },
-  {
-    ignores: ["README.md", "backups/", "build/", ".svelte-kit/", "dist/", ".svelte-kit/", ".wrangler/", "html/", "tests/", "**/*.spec.ts", ".github", "src/lib/types/meta/generated", "*.js"]
   },
 ];
+
+export default t;
