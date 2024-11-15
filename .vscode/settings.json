@@ -8,5 +8,11 @@
     "astro", // Enable .astro
     "typescript", // Enable .ts
     "typescriptreact" // Enable .tsx
-  ]
+  ],
+  "files.exclude": {
+    "node_modules": true,
+    "playwright-report": true,
+    "dist": true,
+    ".astro": true,
+  },
 }
