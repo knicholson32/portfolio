@@ -115,7 +115,7 @@ jobs:
           node-version: 20.10.0
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install && pnpm exec svelte-kit sync
+        run: pnpm install
       - name: Build
         run: pnpm run build
       - name: Deploy
@@ -130,5 +130,5 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: build
-          path: .svelte-kit/cloudflare
+          path: dist
           retention-days: 30
