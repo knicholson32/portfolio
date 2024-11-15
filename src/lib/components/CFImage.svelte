@@ -4,7 +4,7 @@
   import { getImageTransformer } from '$lib/helpers';
 
   interface Props {
-    url: string;
+    src: string;
     imgClass?: 'hero' | 'focus' | 'small' | 'icon';
     fit?: 'scale-down' | 'contain' | 'cover' | 'crop' | 'pad';
     gravity?: 'auto' | 'left' | 'right' | 'top' | 'bottom' | string;
@@ -17,7 +17,7 @@
   }
 
   let { 
-    url,
+    src,
     imgClass = 'focus',
     fit = 'scale-down',
     gravity = 'auto',
@@ -26,7 +26,7 @@
     alt = undefined,
     pixelRatios = [1, 2, 3, 4],
     class: propClass = '',
-    style: propStyle = ''
+    style: propStyle = '',
   }: Props = $props();
 
   let sizeClass = $derived.by(() => {
@@ -43,10 +43,10 @@
   })
 
   
-  const srcsetTransform = $derived(pixelRatios.flatMap((e) => `/cdn-cgi/image/width=${sizeClass * e},format=auto,fit=${fit},gravity=${gravity}/${url.replace(/^\/|\/$/g, '')} ${e}x`).join(', '));
+  const srcsetTransform = $derived(pixelRatios.flatMap((e) => `/cdn-cgi/image/width=${sizeClass * e},format=auto,fit=${fit},gravity=${gravity}/${src.replace(/^\/|\/$/g, '')} ${e}x`).join(', '));
 
   let srcset = $derived.by(() => PUBLIC_ENV === 'prod' ? srcsetTransform : undefined);
-  let src = $derived(getImageTransformer(url.replace(/^\/|\/$/g, ''), sizeClass, fit, gravity));
+  let _src = $derived(getImageTransformer(src.replace(/^\/|\/$/g, ''), sizeClass, fit, gravity));
 
 </script>
 <img
@@ -56,6 +56,6 @@
   decoding={offScreen ? 'async' : 'auto'}
   alt={alt !== undefined ? alt : undefined}
   role={alt === undefined ? 'presentation' : undefined}
-  {src}
+  src={_src}
   {srcset}
 />

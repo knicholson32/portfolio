@@ -1,9 +1,7 @@
 // https://svelte.dev/docs/svelte/testing
 
 import { render, screen, within } from '@testing-library/svelte';
-// import userEvent from '@testing-library/user-event';
 import { expect, test } from 'vitest';
-// import * as elements from './';
 import * as wrappers from '$lib/components/test-wrappers';
 
 test('Paragraph (P)', async () => {
@@ -25,9 +23,9 @@ test('Span (Span)', async () => {
 
 });
 
-test('Heading (H)', async () => {
+test('Heading 1 (H1)', async () => {
 
-  render(wrappers.H, {});
+  render(wrappers.H1, {});
   const h = screen.getByRole('heading');
   const child = within(h).getByTestId('child');
   expect(child).toBeInTheDocument();

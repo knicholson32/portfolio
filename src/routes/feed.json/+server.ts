@@ -1,32 +1,17 @@
 import type Feed from '@json-feed-types/1_1'
 import type { Item } from '@json-feed-types/1_1'
 import { PUBLIC_URL } from '$env/static/public';
-import { loadPosts } from '$lib/server/meta';
+import { loadPosts } from '$lib/server/posts';
 import { keenanrnicholson } from '$lib/types/meta/authors';
+import textVersion from 'textversionjs';
 
 export const prerender = true;
 
-export const GET = async () => {
+export const GET = async ({ fetch }) => {
   
-  const postMeta = loadPosts();
+  const posts = await loadPosts();
 
-  const headers: Headers = new Headers();
-  headers.append('Content-Type', 'application/feed+json');
   const items: Item[] = [];
-
-
-
-  for (let i = 0; i < postMeta.sortOrder.length; i++) {
-    const slug = postMeta.sortOrder[i];
-    const post = postMeta.posts[slug].item;
-    if (post.author === undefined) post.author = keenanrnicholson;
-    post.url = `${PUBLIC_URL}/post/${post.url}`;
-    items.push(post as Item);
-    if (post.image !== undefined && !post.image.startsWith('http')) {
-      post.image = `${PUBLIC_URL}/${post.image.replace(/^\/|\/$/g, '')}`;
-    }
-  }
-  
 
   const feed = {
     "version": "https://jsonfeed.org/version/1.1",
@@ -36,6 +21,27 @@ export const GET = async () => {
     "items": items
   } satisfies Feed;
 
+  const headers: Headers = new Headers();
+  headers.append('Content-Type', 'application/feed+json');
+
+  for (let i = 0; i < posts.sortOrder.length; i++) {
+    const slug = posts.sortOrder[i];
+
+    
+    const post = posts.posts[slug];
+
+    const item: Item = {
+      id: 'post/' + slug,
+      title: post.title,
+      summary: post.summary,
+      content_text: textVersion(await (await fetch(`/post/${slug}`)).text(), {}),
+      url: `${PUBLIC_URL}/post/${slug}`,
+      image: !post.image.url.startsWith('http') ? `${PUBLIC_URL}/${post.image.url.replace(/^\/|\/$/g, '') }` : post.image.url,
+      author: keenanrnicholson,
+    };
+    items.push(item);
+  }
 
   return new Response(JSON.stringify(feed), { status: 200, statusText: 'OK', headers });
+
 };

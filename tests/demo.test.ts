@@ -1,22 +1,20 @@
 import { expect, test } from '@playwright/test';
-import { loadPosts } from '../src/lib/server/meta';
-
+import { JSONFeedItem } from '../src/lib/types/meta/generated/jsonfeed';
 
 test('home page has expected h1', async ({ page }) => {
 	await page.goto('/');
-	await expect(await page.title()).toBe('My Home Page');
+	expect(await page.title()).toBe('My Home Page');
 });
 
 
-const posts = loadPosts();
+const posts = ((await (await fetch('http://localhost:5173/feed.json')).json()) as { items: JSONFeedItem[] }).items;
 
-for (const slug of Object.keys(posts.posts)) {
-	const post = posts.posts[slug];
-
-	test(`Expect post '${post.item.title} -> ${slug}' to load`, async ({ page }) => {
+for (const post of posts) {
+	const slug = post.id.substring(5);
+	test(`Expect post '${post.title} -> ${slug}' to load`, async ({ page }) => {
 		const response = await page.goto(`/post/${slug}`);
 		expect(response).not.toBe(null);
 		expect(response?.status()).toBe(200);
-		expect(await page.title()).toBe(post.item.title);
+		expect(await page.title()).toBe(post.title);
 	});
 }

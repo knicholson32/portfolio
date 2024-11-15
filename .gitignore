@@ -6,6 +6,7 @@ tests-examples
 inspiration
 
 **/*.bak
+backups
 
 # Output
 .output
