@@ -1,38 +1,15 @@
 import type Feed from '@json-feed-types/1_1'
 import type { Item } from '@json-feed-types/1_1'
 import { PUBLIC_URL } from '$env/static/public';
-import { loadPosts } from '$lib/server/meta';
+import { loadPosts } from '$lib/server/posts';
 import { keenanrnicholson } from '$lib/types/meta/authors';
+import textVersion from 'textversionjs';
 
 export const prerender = true;
 
-export const GET = async () => {
+export const GET = async ({ fetch }) => {
   
-  // const postMeta = loadPosts();
-
-
-
-  // for (let i = 0; i < postMeta.sortOrder.length; i++) {
-  //   const slug = postMeta.sortOrder[i];
-  //   const post = postMeta.posts[slug].item;
-  //   if (post.author === undefined) post.author = keenanrnicholson;
-  //   post.url = `${PUBLIC_URL}/post/${post.url}`;
-  //   items.push(post as Item);
-  //   if (post.image !== undefined && !post.image.startsWith('http')) {
-  //     post.image = `${PUBLIC_URL}/${post.image.replace(/^\/|\/$/g, '')}`;
-  //   }
-  // }
-  
-
-  
-
-
-
-  // const res = await getPageContent('/src/routes/_content/posts/2024-11-post-testing-portfolio/index.md');
-
   const posts = await loadPosts();
-
-  console.log(posts);
 
   const items: Item[] = [];
 
@@ -49,23 +26,19 @@ export const GET = async () => {
 
   for (let i = 0; i < posts.sortOrder.length; i++) {
     const slug = posts.sortOrder[i];
-    const post = posts.posts[slug].frontmatter;
-    const html = posts.posts[slug].content;
-    console.log('HTML', html);
+
+    
+    const post = posts.posts[slug];
+
     const item: Item = {
-      id: slug,
+      id: 'post/' + slug,
       title: post.title,
       summary: post.summary,
+      content_text: textVersion(await (await fetch(`/post/${slug}`)).text(), {}),
       url: `${PUBLIC_URL}/post/${slug}`,
-      image: !post.image.src.startsWith('http') ? `${PUBLIC_URL}/${post.image.src.replace(/^\/|\/$/g, '')}` : post.image.src,
-      content_html: html,
-      author: keenanrnicholson
+      image: !post.image.url.startsWith('http') ? `${PUBLIC_URL}/${post.image.url.replace(/^\/|\/$/g, '') }` : post.image.url,
+      author: keenanrnicholson,
     };
-    // if (post.author === undefined) post.author = keenanrnicholson;
-    // post.url = `${PUBLIC_URL}/post/${post.url}`;
-    // if (post.image !== undefined && !post.image.startsWith('http')) {
-    //   post.image = `${PUBLIC_URL}/${post.image.replace(/^\/|\/$/g, '')}`;
-    // }
     items.push(item);
   }
 

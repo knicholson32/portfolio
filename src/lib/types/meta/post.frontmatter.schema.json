@@ -70,7 +70,7 @@
       "title": "Image",
       "type": "object",
       "properties": {
-        "src": {
+        "url": {
           "description": "The URL for the image, referenced locally or with a full URL to an external source.",
           "type": "string"
         },
@@ -78,13 +78,17 @@
           "description": "Alt text for the image.",
           "type": "string"
         },
+        "aspect": {
+          "description": "The aspect ratio of the image. This helps prevent layout shifts when images take a while to load. This can also be used to 'crop' the image down to a better size for use. Ratio = width / height.",
+          "type": "number"
+        },
         "attribution": {
           "description": "Attribution for the image.",
           "type": "string"
         }
       },
       "required": [
-        "src"
+        "url"
       ],
       "minProperties": 1,
       "patternProperties": {},

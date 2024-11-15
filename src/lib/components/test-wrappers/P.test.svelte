@@ -1,5 +1,5 @@
 <script>
-  import { P } from '$lib/components/text-elements'
+  import { p as P } from '$lib/components/text-elements'
 </script>
 
 <P>

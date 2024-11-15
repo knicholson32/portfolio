@@ -1,11 +1,11 @@
-import { loadPosts } from '$lib/server/meta';
+import { loadPosts } from '$lib/server/posts';
 
 
 export const load = async () => {
 
-  const postMeta = await loadPosts();
+  const posts = await loadPosts();
 
   return {
-    postMeta
+    posts
   }
 }

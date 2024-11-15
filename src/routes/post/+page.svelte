@@ -5,7 +5,7 @@
     data: data,
   } = $props();
 
-  console.log(data.postMeta.posts);
+  const posts = data.posts.posts;
 
 
 </script>
@@ -14,6 +14,6 @@
 
 
 
-{#each Object.keys(data.postMeta.posts) as slug}
-    <a href="/post/{slug}">{data.postMeta.posts[slug].frontmatter.title}</a> <br/>
+{#each Object.keys(posts) as slug}
+    <a href="/post/{slug}">{posts[slug].title}</a> <br/>
 {/each}

@@ -1,9 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 import { svelteTesting } from '@testing-library/svelte/vite'
+import { enhancedImages } from '@sveltejs/enhanced-img';
 
 export default defineConfig({
-	plugins: [sveltekit(), svelteTesting()],
+	plugins: [sveltekit(), svelteTesting(), enhancedImages()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 		setupFiles: ['./vitest.setup.ts'],

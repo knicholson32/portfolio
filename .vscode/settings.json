@@ -23,6 +23,8 @@
   "eslint.useFlatConfig": true,
   "cSpell.words": [
     "frontmatter",
+    "frontmatters",
+    "lucide",
     "mdsvex",
     "tailwindcss"
   ],

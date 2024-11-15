@@ -25,6 +25,6 @@ export default [
     }
   },
   {
-    ignores: ["README.md", "backups/", "build/", ".svelte-kit/", "dist/", ".svelte-kit/", ".wrangler/", "html/", "tests/", "**/*.spec.ts", ".github", "src/lib/types/meta/schema.ts", "*.js"]
+    ignores: ["README.md", "backups/", "build/", ".svelte-kit/", "dist/", ".svelte-kit/", ".wrangler/", "html/", "tests/", "**/*.spec.ts", ".github", "src/lib/types/meta/generated", "*.js"]
   },
 ];

@@ -1,23 +1,29 @@
 import { default as auto} from '@sveltejs/adapter-auto';
 import { default as cf } from '@sveltejs/adapter-cloudflare';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-import { mdsvex } from "mdsvex"
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
 	// for more information about preprocessors
-	extensions: ['.svelte', '.md'],
+	extensions: ['.svelte'],
 	preprocess: [
-		mdsvex({
-			extensions: ['.md']
-		}),
+		// mdsvex({
+		// 	extensions: ['.md'],
+		// 	// layout: {
+		// 	// 	blog: 'src/layouts/+layout.svelte',
+		// 	// 	// lab: 'src/layouts/lab.svelte',
+		// 	// 	// styles: 'src/routes/styles/_examples/layout.svelte',
+		// 	// 	_: 'src/layouts/+layout.svelte'
+		// 	// },
+		// 	// layout: 'src/layouts/+layout.svelte'
+		// }),
 		vitePreprocess()
 	],
 	kit: {
 		prerender: {
 			handleHttpError: ({ path, referrer, message }) => {
-				// ignore deliberate link to shiny 404 page
+				// ignore deliberate link to cdn image
 				if (path.startsWith('/cdn-cgi/image/')) return;
 
 				// otherwise fail the build

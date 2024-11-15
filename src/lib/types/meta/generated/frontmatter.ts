@@ -44,11 +44,15 @@ export interface Image {
   /**
    * The URL for the image, referenced locally or with a full URL to an external source.
    */
-  src: string;
+  url: string;
   /**
    * Alt text for the image.
    */
   alt?: string;
+  /**
+   * The aspect ratio of the image. This helps prevent layout shifts when images take a while to load. This can also be used to 'crop' the image down to a better size for use. Ratio = width / height.
+   */
+  aspect?: number;
   /**
    * Attribution for the image.
    */
