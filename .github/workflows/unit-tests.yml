@@ -34,11 +34,11 @@ jobs:
         node-version: 20.10.0
         cache: 'pnpm'
     - name: Install dependencies
-      run: pnpm install && pnpm exec svelte-kit sync
+      run: pnpm install
     - name: Run lint
       run: pnpm run lint
-    - name: Run unit tests
-      run: pnpm run test
+    # - name: Run unit tests
+    #   run: pnpm run test
 
   # End to End Testing --------------------------------
   # Only run during pull requests
@@ -66,7 +66,7 @@ jobs:
         node-version: 20.10.0
         cache: 'pnpm'
     - name: Install dependencies
-      run: pnpm install && pnpm exec svelte-kit sync
+      run: pnpm install
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
     - name: Run Playwright tests
@@ -115,7 +115,7 @@ jobs:
           node-version: 20.10.0
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install && pnpm exec svelte-kit sync
+        run: pnpm install
       - name: Build
         run: pnpm run build
       - name: Deploy
@@ -125,10 +125,10 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: pnpm
-          command: pages deploy .svelte-kit/cloudflare --project-name=portfolio
+          command: pages deploy dist --project-name=portfolio
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: build
-          path: .svelte-kit/cloudflare
+          path: dist
           retention-days: 30

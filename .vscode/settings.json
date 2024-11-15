@@ -1,37 +1,18 @@
 {
-  "files.autoGuessEncoding": true,
-  "editor.tabSize": 2,
-  "json.schemas": [
-    {
-      "fileMatch": [
-        "**/meta.json"
-      ],
-      "url": "./src/lib/types/meta/metaSchema.json"
-    }
-  ],
-  "markdownlint.config": {
-    "default": true,
-    "MD033": false,
-    "no-hard-tabs": false
-  },
-  "yaml.customTags": [
-    
-  ],
-  "yaml.schemas": {
-    "src/lib/types/meta/metaSchema.json": "src/routes/_content/posts/2024-11-post-testing-portfolio/index.md"
-  },
-  "eslint.useFlatConfig": true,
   "cSpell.words": [
-    "frontmatter",
-    "frontmatters",
-    "lucide",
-    "mdsvex",
-    "tailwindcss"
+    "astro"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "astro", // Enable .astro
+    "typescript", // Enable .ts
+    "typescriptreact" // Enable .tsx
   ],
   "files.exclude": {
-    ".svelte-kit": true,
     "node_modules": true,
     "playwright-report": true,
-    "test-results": true
+    "dist": true,
+    ".astro": true,
   },
 }
