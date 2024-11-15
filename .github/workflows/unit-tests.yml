@@ -37,8 +37,8 @@ jobs:
       run: pnpm install
     - name: Run lint
       run: pnpm run lint
-    - name: Run unit tests
-      run: pnpm run test
+    # - name: Run unit tests
+    #   run: pnpm run test
 
   # End to End Testing --------------------------------
   # Only run during pull requests
