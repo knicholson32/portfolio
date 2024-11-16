@@ -53,7 +53,7 @@
 
 
 import { getContainerRenderer as getMDXRenderer } from "@astrojs/mdx";
-import { getContainerRenderer as svelteRenderer, svelteIntegration } from "@astrojs/svelte";
+import { getContainerRenderer as svelteRenderer } from "@astrojs/svelte";
 import rss, { type RSSFeedItem } from "@astrojs/rss";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
