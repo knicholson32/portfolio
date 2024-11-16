@@ -14,7 +14,7 @@ const post = defineCollection({
 			message: "Cover image must be at least 1080 pixels wide!",
 		}),
 		// coverAlt: z.string(),
-		aspect: z.number()
+		aspect: z.number().optional()
 	}),
 });
 

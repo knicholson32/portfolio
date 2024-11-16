@@ -110,11 +110,12 @@ export async function GET(context: APIContext) {
 			},
 			sanitize({ dropElements: ["script", "style"] }),
 		]);
-		feedItems.push({ ...post.data, link: `/blog/${post.slug}/`, content });
+		feedItems.push({ ...post.data, link: `/post/${post.slug}/`, content });
 	}
 
 	// Return our RSS feed XML response.
 	return rss({
+		// stylesheet: '/rss/pretty-feed-v3.xsl',
 		title: SITE_TITLE,
 		description: SITE_DESCRIPTION,
 		site: baseUrl,
