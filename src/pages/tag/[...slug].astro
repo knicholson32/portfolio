@@ -1,0 +1,65 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import BaseHead from "@components/BaseHead.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "@consts";
+import BaseHTML from "@layouts/BaseHTML.astro";
+import { Image } from "astro:assets";
+import PostPreview from "@components/PostPreview.astro";
+import PostGrid from "@components/PostGrid.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("post");
+
+  const paths: string[] = [];
+
+  for (const post of posts)
+    if (post.data.tags !== undefined)
+      for (const t of post.data.tags)
+        if (!paths.includes(t.toLowerCase())) paths.push(t.toLowerCase());
+
+  return paths.map((p) => ({ params: { slug: p } }));
+}
+
+type Props = CollectionEntry<"post">;
+
+const slug = Astro.params.slug;
+
+const postsUnfiltered = await getCollection("post");
+
+const posts = postsUnfiltered.filter((p) => {
+  return (
+    p.data.tags !== undefined &&
+    p.data.tags.findIndex((t: string) => {
+      return t.toLowerCase() === slug.toLowerCase();
+    }) !== -1
+  );
+});
+
+const postsWithRenderProps = await Promise.all(
+  posts.map(async (post) => {
+    const { remarkPluginFrontmatter } = await post.render();
+    return {
+      post: post,
+      minutesRead: remarkPluginFrontmatter.minutesRead as string | undefined,
+    };
+  }),
+);
+---
+
+<BaseHTML>
+  <BaseHead slot="header" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  <div class="w-full font-mono">
+    &gt; showing Posts with a tag of <code class="opacity-80 text-amber-500"
+      >{slug}</code
+    >:
+  </div>
+  <hr class="py-0 mt-4 mb-2 w-full" />
+  <PostGrid posts={postsWithRenderProps} />
+</BaseHTML>
+
+<!-- <BlogPost minutesRead={remarkPluginFrontmatter.minutesRead} data={post.data}>
+  <div class="">
+    <Content />
+  </div>
+</BlogPost> -->

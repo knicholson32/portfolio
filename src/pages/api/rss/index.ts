@@ -96,7 +96,10 @@ export async function GET(context: APIContext) {
 		// - Makes link `href` and image `src` attributes absolute instead of relative
 		// - Strips any `<script>` and `<style>` tags
 		// Thanks @Princesseuh — https://github.com/Princesseuh/erika.florist/blob/1827288c14681490fa301400bfd815acb53463e9/src/middleware.ts
-		const content = await transform(rawContent.replace(/^<!DOCTYPE html>/, ''), [
+		let coverImage: string;
+		if (process.env.NODE_ENV === 'production') coverImage = `<img src="${baseUrl}${post.data.image.img.src}" alt="Cover image">`;
+		else coverImage = `<img src="${baseUrl}/_image?href=${encodeURIComponent(post.data.image.img.src)}" alt="Cover image">`;
+		const content = coverImage + await transform(rawContent.replace(/^<!DOCTYPE html>/, ''), [
 			async (node) => {
 				await walk(node, (node) => {
 					if (node.name === "a" && node.attributes.href?.startsWith("/")) {
@@ -110,6 +113,7 @@ export async function GET(context: APIContext) {
 			},
 			sanitize({ dropElements: ["script", "style"] }),
 		]);
+		
 		feedItems.push({ ...post.data, link: `/post/${post.slug}/`, content });
 	}
 

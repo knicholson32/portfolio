@@ -1,0 +1,14 @@
+---
+type Props = {
+  tag: string;
+  num?: number;
+};
+
+const { tag, num } = Astro.props;
+---
+
+<a
+  href={`/tag/${tag.toLocaleLowerCase()}`}
+  class="text-neutral-700 flex-grow-0 w-fit dark:text-neutral-300 no-underline text-xs font-mono px-2 py-0 border dark:border-neutral-600 rounded-full"
+  >{tag}{num && ': ' + num}</a
+>

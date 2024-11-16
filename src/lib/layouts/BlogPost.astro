@@ -4,17 +4,27 @@ import BaseHead from "@components/BaseHead.astro";
 import BaseHTML from "@layouts/BaseHTML.astro";
 import { Picture } from "astro:assets";
 import FormattedDate from "@components/FormattedDate.astro";
+import Tag from "@components/Tag.astro";
 
-type Props = CollectionEntry<"post">["data"];
+type Props = {
+	minutesRead: string | undefined;
+	data: CollectionEntry<"post">["data"];
+};
 
-const { title, description, pubDate, updatedDate, heroImage, aspect } =Astro.props;
+const {
+	minutesRead,
+	data,
+} = Astro.props;
 
-const aspectRatio = (aspect === undefined ? '' : `aspect-ratio: ${aspect};`);
+const aspectRatio =
+	data.image.aspect === undefined ? "" : `aspect-ratio: ${data.image.aspect};`;
+
 ---
 
 <BaseHTML>
-	<BaseHead slot="header" title={title} description={description} image={heroImage.src} type="article" />
-	<article>
+	<BaseHead slot="header" title={data.title} description={data.description} image={data.image.img.src} type="article"
+	/>
+	<article class="w-full max-w-2xl">
 		<div class="hero-image">
 			<!-- {heroImage && <img width={1020} height={510} src={heroImage} alt="" />} -->
 			<!-- <Image
@@ -25,30 +35,26 @@ const aspectRatio = (aspect === undefined ? '' : `aspect-ratio: ${aspect};`);
 				class="object-cover"
 				alt="Cover image"
 			/> -->
-			<Picture
-				formats={["avif", "webp"]}
-				width={1020}
-				height={510}
-				src={heroImage}
-				style={aspectRatio}
-				class="object-cover"
-				loading={'eager'}
-				alt="Cover image"
+			<Picture formats={["avif", "webp"]} width={1020} height={510} src={data.image.img} style={aspectRatio} class="object-cover" loading={"eager"} alt="Cover image"
 			/>
 		</div>
 		<div class="">
 			<div class="title">
-				<div class="date">
-					<FormattedDate date={pubDate} />
-					{
-						updatedDate && (
-							<div class="last-updated-on">
-								Last updated on <FormattedDate date={updatedDate} />
+				<h1 class="mb-2 text-xl xs:text-3xl sm:text-4xl">{data.title}</h1>
+				<div class="flex flex-row items-center gap-1 whitespace-nowrap">
+					<FormattedDate date={data.pubDate} />
+					<div class="hidden sm:inline-flex gap-1 items-center">{
+						data.pubDate && (
+							<span>•</span>
+							<div class="text-xs italic">
+								Updated <FormattedDate date={data.pubDate} />
 							</div>
 						)
-					}
+					}</div>
+					{minutesRead !== undefined ? <span>•</span><span class="text-xs italic">{minutesRead}</span> : ""}
+					<div class="flex-grow"></div>
+					<div class="inline-flex gap-1 items-center overflow-x-scroll">{ data.tags && data.tags.map((d) => <Tag tag={d}/>) }</div>
 				</div>
-				<h1 class="mb-2">{title}</h1>
 				<hr class="py-0 mt-4 mb-2" />
 			</div>
 			<slot />
