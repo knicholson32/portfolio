@@ -4,6 +4,7 @@ description: 'Lorem ipsum dolor sit amet'
 pubDate: 'Jul 15 2022'
 heroImage: './images/laptop-desk.jpg'
 aspect: 3
+# https://blog.kizu.dev/astro-mdx-components/
   # import type { FrontmatterFormat } from "$lib/types/meta/generated/frontmatter";
   #   import cover from './images/laptop-desk.jpg';
     
@@ -33,7 +34,7 @@ aspect: 3
   #   } satisfies FrontmatterFormat;
 ---
 
-import Counter from '@components/svelte/Counter.svelte';
+import Counter from '@components/svelte/Counter.svelte';  
 import { Star } from 'lucide-astro'
 
 This is a paragraph. <Star class="inline-flex w-4"/> There can be lots of text here: Lorem ipsum odor amet, consectetuer adipiscing elit. Scelerisque lobortis sem commodo posuere sagittis. Et mattis enim nostra odio auctor massa eget urna. Vestibulum urna accumsan eget, rhoncus dapibus congue lacus. Suspendisse facilisis et est orci class elit aptent nec. [Here is a link to google.](https://www.google.com) Vitae arcu diam donec metus cras, purus lacus. Ligula mi cursus sem posuere netus. Sagittis inceptos duis sodales pharetra risus sagittis nam. Velit aptent hendrerit amet turpis nostra scelerisque consectetur.
@@ -48,7 +49,7 @@ Vitae imperdiet habitant habitasse adipiscing eu eros ligula. Bibendum praesent 
 }
 ```
 
-<Counter client:idle title="Test!" />
+<Counter title="Test!" />
 
 Proin taciti convallis ullamcorper, morbi consectetur donec. Enim mauris in sodales ex viverra; lectus est nostra. Erat accumsan litora sem etiam potenti platea. Nascetur accumsan bibendum magna neque sodales bibendum. Auctor curae erat eros aliquam mauris posuere sodales natoque. Purus phasellus ullamcorper curae vehicula ad.
 
