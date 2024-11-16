@@ -53,6 +53,9 @@ importers:
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
+      ultrahtml:
+        specifier: ^1.5.3
+        version: 1.5.3
     devDependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.15
@@ -2863,6 +2866,9 @@ packages:
 
   ufo@1.5.4:
     resolution: {integrity: sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==}
+
+  ultrahtml@1.5.3:
+    resolution: {integrity: sha512-GykOvZwgDWZlTQMtp5jrD4BVL+gNn2NVlVafjcFUJ7taY20tqYdwdoWBFy6GBJsNTZe1GkGPkSl5knQAjtgceg==}
 
   undici@5.28.4:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
@@ -6541,6 +6547,8 @@ snapshots:
   typescript@5.6.3: {}
 
   ufo@1.5.4: {}
+
+  ultrahtml@1.5.3: {}
 
   undici@5.28.4:
     dependencies:

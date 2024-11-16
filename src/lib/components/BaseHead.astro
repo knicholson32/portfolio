@@ -3,6 +3,8 @@
 // all pages through the use of the <BaseHead /> component.
 import "@styles/global.css";
 
+import { SITE_TITLE } from '@consts';
+
 interface Props {
 	title: string;
 	description: string;
@@ -27,10 +29,12 @@ const {
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 
+<link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL("api/rss", Astro.site)}/>
+
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
-<link
+<!-- <link
 	rel="preload"
 	href="/fonts/atkinson-regular.woff"
 	as="font"
@@ -43,7 +47,7 @@ const {
 	as="font"
 	type="font/woff"
 	crossorigin
-/>
+/> -->
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
