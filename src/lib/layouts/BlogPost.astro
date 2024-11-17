@@ -29,7 +29,7 @@ const aspectRatio =
 	/>
 	<article class="w-full max-w-2xl">
 		<ViewTransitionLimiter client:idle slug={slug}>
-			<Picture formats={["avif", "webp"]} width={2048} src={data.image.img} style={aspectRatio} class="object-cover z-10" loading={"eager"} alt="Cover image" 
+			<Picture formats={["avif", "webp"]} width={1024} src={data.image.img} style={aspectRatio} class="object-cover z-10" loading={"eager"} alt="Cover image" 
 			/>
 		</ViewTransitionLimiter>
 		<div class="">

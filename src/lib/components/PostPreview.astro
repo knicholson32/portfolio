@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import FormattedDate from "@components/FormattedDate.astro";
 import { Image } from "astro:assets";
 import Tag from "@components/Tag.astro";
+import Picture from "astro/components/Picture.astro";
 
 type Props = {
   minutesRead: string | undefined;
@@ -15,7 +16,9 @@ const { minutesRead, post } = Astro.props;
 <div class="prose-a:no-underline prose-a:font-normal rounded-xl">
   <a href={`/post/${post.slug}/`} class="flex flex-col gap-0 justify-center">
     {/* <h3 class="text-3xl my-0">{post.data.title}</h3> */}
-    <Image
+    <Picture formats={["avif", "webp"]} width={1024} src={post.data.image.img} style={`aspect-ratio: ${post.data.image.aspect ?? 2};`} class="object-cover rounded-lg m-0 mb-2" loading={"lazy"} alt="Cover image" transition:name={`${post.slug}-img`}
+			/>
+    <!-- <Image
       width={720}
       height={360}
       src={post.data.image.img}
@@ -23,7 +26,7 @@ const { minutesRead, post } = Astro.props;
       style={`aspect-ratio: ${post.data.image.aspect ?? 2};`}
       class="object-cover rounded-lg m-0 mb-2"
       transition:name={`${post.slug}-img`}
-    />
+    /> -->
     <h1 class="mb-2 px-2 white text-left">{post.data.title}</h1>
     <div class="px-2 italic text-sm inline-flex gap-1 items-center overflow-x-hidden">
       <div class="inline-flex gap-1 items-center whitespace-nowrap">
