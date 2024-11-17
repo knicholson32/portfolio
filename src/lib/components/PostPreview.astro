@@ -20,8 +20,9 @@ const { minutesRead, post } = Astro.props;
       height={360}
       src={post.data.image.img}
       alt="Cover image"
-      style={`aspect-ratio: ${2};`}
+      style={`aspect-ratio: ${post.data.image.aspect ?? 2};`}
       class="object-cover rounded-lg m-0 mb-2"
+      transition:name={`${post.slug}-img`}
     />
     <h1 class="mb-2 px-2 white text-left">{post.data.title}</h1>
     <div class="px-2 italic text-sm inline-flex gap-1 items-center overflow-x-hidden">

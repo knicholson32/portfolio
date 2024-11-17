@@ -5,7 +5,7 @@ pubDate: 'Jun 19 2024'
 image: 
   img: './images/laptop-desk.jpg'
   alt: 'my alt text'
-  aspect: 3
+  aspect: 2
 tags:
   - Markdown
   - Testing
