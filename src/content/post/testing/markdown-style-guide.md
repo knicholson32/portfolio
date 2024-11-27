@@ -2,8 +2,13 @@
 title: 'Markdown Style Guide'
 description: 'Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.'
 pubDate: 'Jun 19 2024'
-heroImage: './images/laptop-desk.jpg'
-aspect: 3
+image: 
+  img: './images/laptop-desk.jpg'
+  alt: 'my alt text'
+  aspect: 2
+tags:
+  - Markdown
+  - Testing
 ---
 
 Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.

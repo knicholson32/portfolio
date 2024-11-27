@@ -2,9 +2,31 @@
 export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
-		extend: {},
+		extend: {
+			screens: {
+				'xs': '475px',
+			},
+			keyframes: {
+				wiggle: {
+					'0%, 100%': { transform: 'rotate(-10deg)' },
+					'50%': { transform: 'rotate(10deg)' },
+				}
+			},
+			animation: {
+				wiggle: 'wiggle 0.75s ease-in-out infinite',
+			},
+			// fontFamily: {
+			// 	'mono': ['monospace'] // ['"JetBrains Mono"']
+			// },
+			colors: {
+				neutral: {
+					925: '#171717'
+				},
+			}
+		},
 	},
 	plugins: [
-		require('@tailwindcss/typography')
+		require('@tailwindcss/typography'),
+		require('tailwind-scrollbar'),
 	],
 }
