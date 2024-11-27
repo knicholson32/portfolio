@@ -6,6 +6,7 @@ import { Picture } from "astro:assets";
 import FormattedDate from "@components/FormattedDate.astro";
 import Tag from "@components/Tag.astro";
 import ViewTransitionLimiter from "@components/svelte/ViewTransitionLimiter.svelte";
+import { SITE_TITLE } from "@consts";
 
 type Props = {
 	minutesRead: string | undefined;
@@ -25,7 +26,7 @@ const aspectRatio =
 ---
 
 <BaseHTML>
-	<BaseHead slot="header" title={data.title} description={data.description} image={data.image.img.src} type="article"
+	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image.img.src} type="article"
 	/>
 	<article class="w-full max-w-2xl">
 		<ViewTransitionLimiter client:idle slug={slug}>

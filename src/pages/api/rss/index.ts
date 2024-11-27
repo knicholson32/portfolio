@@ -87,34 +87,39 @@ export async function GET(context: APIContext) {
 		const post = p as CollectionEntry<'post'>;
 		// Get the `<Content/>` component for the current post.
 		post.body = post.body.replace('client:idle', '');
-		const { Content } = await post.render();
-		// Use the Astro container to render the content to a string.
+		try {
+			const { Content } = await post.render();
+			// Use the Astro container to render the content to a string.
 
-		const rawContent = await container.renderToString(Content);
-		// Process and sanitize the raw content:
-		// - Removes `<!DOCTYPE html>` preamble
-		// - Makes link `href` and image `src` attributes absolute instead of relative
-		// - Strips any `<script>` and `<style>` tags
-		// Thanks @Princesseuh — https://github.com/Princesseuh/erika.florist/blob/1827288c14681490fa301400bfd815acb53463e9/src/middleware.ts
-		let coverImage: string;
-		if (process.env.NODE_ENV === 'production') coverImage = `<img src="${baseUrl}${post.data.image.img.src}" alt="Cover image">`;
-		else coverImage = `<img src="${baseUrl}/_image?href=${encodeURIComponent(post.data.image.img.src)}" alt="Cover image">`;
-		const content = coverImage + await transform(rawContent.replace(/^<!DOCTYPE html>/, ''), [
-			async (node) => {
-				await walk(node, (node) => {
-					if (node.name === "a" && node.attributes.href?.startsWith("/")) {
-						node.attributes.href = baseUrl + node.attributes.href;
-					}
-					if (node.name === "img" && node.attributes.src?.startsWith("/")) {
-						node.attributes.src = baseUrl + node.attributes.src;
-					}
-				});
-				return node;
-			},
-			sanitize({ dropElements: ["script", "style"] }),
-		]);
-		
-		feedItems.push({ ...post.data, link: `/post/${post.slug}/`, content });
+			const rawContent = await container.renderToString(Content);
+			// Process and sanitize the raw content:
+			// - Removes `<!DOCTYPE html>` preamble
+			// - Makes link `href` and image `src` attributes absolute instead of relative
+			// - Strips any `<script>` and `<style>` tags
+			// Thanks @Princesseuh — https://github.com/Princesseuh/erika.florist/blob/1827288c14681490fa301400bfd815acb53463e9/src/middleware.ts
+			let coverImage: string;
+			if (process.env.NODE_ENV === 'production') coverImage = `<img src="${baseUrl}${post.data.image.img.src}" alt="Cover image">`;
+			else coverImage = `<img src="${baseUrl}/_image?href=${encodeURIComponent(post.data.image.img.src)}" alt="Cover image">`;
+			const content = coverImage + await transform(rawContent.replace(/^<!DOCTYPE html>/, ''), [
+				async (node) => {
+					await walk(node, (node) => {
+						if (node.name === "a" && node.attributes.href?.startsWith("/")) {
+							node.attributes.href = baseUrl + node.attributes.href;
+						}
+						if (node.name === "img" && node.attributes.src?.startsWith("/")) {
+							node.attributes.src = baseUrl + node.attributes.src;
+						}
+					});
+					return node;
+				},
+				sanitize({ dropElements: ["script", "style"] }),
+			]);
+			
+			feedItems.push({ ...post.data, link: `/post/${post.slug}/`, content });
+		} catch(e) {
+			feedItems.push({ ...post.data, link: `/post/${post.slug}/`, content: `<p>${post.data.description}</p><p>This post contains Javascript components that cannot be rendered here. Please <a href="${baseUrl}/post/${post.slug}">visit the post</a> to continue reading.</p>`});
+			console.log(e);
+		}
 	}
 
 	// Return our RSS feed XML response.

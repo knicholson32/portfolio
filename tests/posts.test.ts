@@ -1,9 +1,10 @@
+import { SITE_TITLE } from '@consts';
 import { expect, test } from '@playwright/test';
 import type { CollectionEntry } from 'astro:content';
 
 test('home page has expected h1', async ({ page }) => {
 	await page.goto('/');
-	expect(await page.title()).toBe('Keenan\'s Devlog');
+	expect(await page.title()).toBe(SITE_TITLE);
 });
 
 
@@ -15,6 +16,6 @@ for (const post of posts) {
 		const response = await page.goto(`/post/${slug}`);
 		expect(response).not.toBe(null);
 		expect(response?.status()).toBe(200);
-		expect(await page.title()).toBe(post.data.title);
+		expect(await page.title()).toBe(post.data.title + ' | ' + SITE_TITLE);
 	});
 }
