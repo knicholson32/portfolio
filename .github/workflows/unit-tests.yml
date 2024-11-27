@@ -44,8 +44,8 @@ jobs:
   # Only run during pull requests
   e2e:
     name: Run Linting and End-To-End Testing
-    if: |
-      github.event_name == 'pull_request'
+    # if: |
+    #   github.event_name == 'pull_request'
     env:
       PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
       PUBLIC_ENV: testing
