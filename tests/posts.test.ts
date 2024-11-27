@@ -4,7 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 
 test('home page has expected h1', async ({ page }) => {
 	await page.goto('/');
-	expect(await page.title()).toBe(SITE_TITLE);
+	expect(await page.title()).toBe('Main | ' + SITE_TITLE);
 });
 
 
