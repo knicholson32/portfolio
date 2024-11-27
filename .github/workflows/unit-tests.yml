@@ -1,7 +1,7 @@
 name: Test and Deploy
 on:
   push:
-  pull_request:
+  # pull_request:
   # workflow_dispatch:
   #   inputs:
   #     environment:
@@ -11,41 +11,41 @@ on:
 
 jobs:
 
-  # Linting and Unit Testing --------------------------
-  # Only run during pull-requests
-  lint_unit:
-    name: Run Lint and Unit Tests
-    if: |
-      github.event_name == 'pull_request'
-    env:
-      PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
-      PUBLIC_ENV: testing
-    timeout-minutes: 5
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 9
-    - name: Use Node.js 20.10.0
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.10.0
-        cache: 'pnpm'
-    - name: Install dependencies
-      run: pnpm install
-    - name: Run lint
-      run: pnpm run lint
-    # - name: Run unit tests
-    #   run: pnpm run test
+  # # Linting and Unit Testing --------------------------
+  # # Only run during pull-requests
+  # lint_unit:
+  #   name: Run Lint and Unit Tests
+  #   if: |
+  #     github.event_name == 'pull_request'
+  #   env:
+  #     PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
+  #     PUBLIC_ENV: testing
+  #   timeout-minutes: 5
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Install pnpm
+  #     uses: pnpm/action-setup@v4
+  #     with:
+  #       version: 9
+  #   - name: Use Node.js 20.10.0
+  #     uses: actions/setup-node@v4
+  #     with:
+  #       node-version: 20.10.0
+  #       cache: 'pnpm'
+  #   - name: Install dependencies
+  #     run: pnpm install
+  #   - name: Run lint
+  #     run: pnpm run lint
+  #   # - name: Run unit tests
+  #   #   run: pnpm run test
 
   # End to End Testing --------------------------------
   # Only run during pull requests
   e2e:
-    name: Run End-To-End Testing
-    if: |
-      github.event_name == 'pull_request'
+    name: Run Linting and End-To-End Testing
+    # if: |
+    #   github.event_name == 'pull_request'
     env:
       PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
       PUBLIC_ENV: testing
@@ -69,6 +69,8 @@ jobs:
       run: pnpm install
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
+    - name: Run ESLint
+      run: pnpm run lint
     - name: Run Playwright tests
       run: pnpm exec playwright test
     - uses: actions/upload-artifact@v4
@@ -83,11 +85,11 @@ jobs:
   # https://github.com/cloudflare/wrangler-action
   deploy:
     name: Deploy to Cloudflare Pages
-    needs: [e2e, lint_unit]
-    if: |
-      always() &&
-      (needs.lint_unit.result == 'success' || needs.lint_unit.result == 'skipped') &&
-      (needs.e2e.result == 'success' || needs.e2e.result == 'skipped')
+    # needs: [e2e, lint_unit]
+    # if: |
+    #   always() &&
+    #   (needs.lint_unit.result == 'success' || needs.lint_unit.result == 'skipped') &&
+    #   (needs.e2e.result == 'success' || needs.e2e.result == 'skipped')
     env:
       PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
       PUBLIC_ENV: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
@@ -116,6 +118,8 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
       - name: Build
         run: pnpm run build
       - name: Deploy

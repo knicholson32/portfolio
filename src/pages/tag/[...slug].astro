@@ -48,7 +48,7 @@ const postsWithRenderProps = await Promise.all(
 ---
 
 <BaseHTML>
-  <BaseHead slot="header" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  <BaseHead slot="header" title={slug + ' | ' + SITE_TITLE} description={SITE_DESCRIPTION} />
   <div class="w-full font-mono">
     &gt; showing Posts with a tag of <code class="opacity-80 text-amber-500"
       >{slug}</code
