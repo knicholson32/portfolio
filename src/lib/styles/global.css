@@ -3,6 +3,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+    /* Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+}
+
+figcaption {
+  margin-top: -1.25rem /* -20px */ !important;
+  text-align: center;
+}
+
 /* @layer base {
 	@font-face {
     font-family: JetBrains Mono;

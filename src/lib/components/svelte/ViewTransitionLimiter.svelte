@@ -21,6 +21,6 @@
     on:inview_leave={(event) => {
       const { inView, entry, scrollDirection, observer, node} = event.detail;
       transition = inView;
-    }} class="hero-image -mt-10" style="view-transition-name: {transition ? `${slug}-img` : 'none'} !important;">
+    }} class="hero-image -mt-10" style="view-transition-name: {transition ? `img-${slug.replaceAll('/','-')}` : 'none'} !important;">
   {@render children()}
 </div>

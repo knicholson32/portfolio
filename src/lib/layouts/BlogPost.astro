@@ -47,7 +47,7 @@ const aspectRatio =
 					}</div>
 					{minutesRead !== undefined ? <span>•</span><span class="text-xs italic">{minutesRead}</span> : ""}
 					<div class="flex-grow"></div>
-					<div class="inline-flex gap-1 items-center overflow-x-scroll">{ data.tags && data.tags.map((d) => <Tag tag={d}/>) }</div>
+					<div class="inline-flex gap-1 items-center overflow-x-scroll no-scrollbar">{ data.tags && data.tags.map((d) => <Tag tag={d}/>) }</div>
 				</div>
 				<hr class="py-0 mt-4 mb-2 border-neutral-200 dark:border-neutral-800" />
 			</div>

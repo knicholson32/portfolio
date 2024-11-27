@@ -9,6 +9,6 @@ type Props = {
 const { posts } = Astro.props;
 ---
 
-<div class="grid grid-cols-1 gap-6 xs:grid-cols-2 md:grid-cols-3 max-w-4xl">
+<div class="grid grid-cols-1 gap-6 xs:grid-cols-2 md:grid-cols-3 max-w-7xl">
   {posts.map((post) => <PostPreview post={post.post} minutesRead={post.minutesRead} />)}
 </div>

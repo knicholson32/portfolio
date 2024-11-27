@@ -17,6 +17,7 @@ const post = defineCollection({
 			alt: z.string(),
 			aspect: z.number().optional()
 		}),
+		repo: z.string().optional(),
 		tags: z.array(z.string()).optional(),
 		related: z.array(z.string()).optional(),
 		minutesRead: z.string().optional()

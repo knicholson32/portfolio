@@ -1,0 +1,73 @@
+---
+title: Advent of Code
+description: It's the time of year where I <b><i>will</i></b> spend 2 hours programming something I could probably do by hand in 30 minutes... at least for the first few puzzles.
+pubDate: Dec 1 2024
+image: 
+  img: './images/advent-of-code.png'
+  alt: Advent of Code Christmas Tree built from colored ascii characters.
+  aspect: 2
+repo: https://github.com/knicholson32/advent-of-code-2024
+tags:
+  - Advent of Code
+  - Programming
+---
+
+import ChristmasBell from '@components/svelte/decorations/ChristmasBell.svelte'
+
+Last year, I heard about the [Advent of Code](https://adventofcode.com/) about <sup>3</sup>/<sub>4</sub> of the way through the month. At first, all seemed well-- I buzzed through the first 4 or 5 puzzles in a couple hours. The later puzzles, however, took ***way*** longer. At the time, spending 5 hours a day during the holidays trying to catch up wasn't something I could get behind.
+
+This year, I am hoping to change that!
+
+For those of you who don't know about the [Advent of Code](https://adventofcode.com/) challenge, it is an advent calendar for surprisingly detailed programming challenges, released daily for the month of december. Each challenge has two parts, with generally increasing difficulty as the month progresses, and completing them gives you *stars* and more importantly, 1 line of a winter-wonderland-inspired `ascii` art piece:
+
+<figure>
+  ![Advent of code 2017 ascii artwork, depicting the 'circuits' inside a printer.](./images/0_383PHHVAF5gTJDjz.png)
+  <figcaption>2017's ascii art. I mean, look at that! I need it.</figcaption>
+</figure>
+
+I've decided that I'll program this year in `Typescript` on top of [Bun](https://bun.sh/) (which is awesome and deserves it's own post), and I've created a basic scaffold to use going forward. I know, I should probably learn rust, but hey, it's what I'm used to right now.
+
+Each day, my environment will populate a basic file for me to code the day's challenges in, and downloads the program input file from <abbr title="Advent of Code">AoC</abbr> using the session cookie from my browser (which is required because everyone's input prompts are unique).
+
+
+```typescript
+/**
+ * Folder structure (auto-generated):
+ * day
+ * ├─1
+ * │ ├─input.txt
+ * │ └─index.ts
+ * └─2
+ *   ├─input.txt
+ *   └─index.ts
+ */
+
+// input.ts ####
+import * as helpers from '@helpers';
+/**
+ * Advent of Code 2024_1, Part 1
+ * @author Keenan Nicholson
+ */ 
+export const part1 = async () => {
+  const input = await helpers.loadInput(import.meta.dir);
+  console.log('');
+}
+
+/**
+ * Advent of Code 2024_1, Part 2
+ * @author Keenan Nicholson
+ */ 
+export const part2 = async () => {
+  const input = await helpers.loadInput(import.meta.dir);
+  console.log('');
+}
+
+```
+
+Each resulting day script folder contains an input file `(input.txt)`, and a script file `(index.ts)`. Bun's `--watch` flag is used to reload whenever the day's script is updated, which makes trial and error very fast:
+```shell
+bun --watch ./
+```
+
+<p class="group">As I progress, I'll push my solutions to my [GitHub](https://github.com/knicholson32/advent-of-code-2024) as I get the chance. I certainly don't expect my scripts to win any awards, but I think it'll be fun. <ChristmasBell /></p>
+

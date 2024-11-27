@@ -1,28 +1,30 @@
 ---
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
-import { ViewTransitions } from 'astro:transitions';
+import { ViewTransitions } from "astro:transitions";
 
 interface Props {
-  class?: string,
-  pageType?: 'devlog'
+  class?: string;
+  pageType?: "devlog";
 }
 
-const { class: className, pageType = 'devlog' } = Astro.props;
+const { class: className, pageType = "devlog" } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en" class="bg-neutral-100 dark:bg-neutral-925">
   <head>
     <slot name="header" />
-    <ViewTransitions  />
+    <ViewTransitions />
   </head>
 
-  <body class="relative bg-neutral-50 dark:bg-neutral-900" >
+  <body class="relative bg-neutral-50 dark:bg-neutral-900">
     <Header title={pageType} />
     <main class="flex flex-col w-full items-center py-6">
-      <div class="prose dark:prose-invert prose-amber prose-img:rounded-xl p-4 overflow-x-hidden max-w-full">
-        <slot/>
+      <div
+        class="prose dark:prose-invert prose-amber prose-img:rounded-xl p-4 overflow-x-hidden max-w-full"
+      >
+        <slot />
       </div>
     </main>
     <Footer />

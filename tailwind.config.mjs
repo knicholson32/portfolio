@@ -6,6 +6,15 @@ export default {
 			screens: {
 				'xs': '475px',
 			},
+			keyframes: {
+				wiggle: {
+					'0%, 100%': { transform: 'rotate(-10deg)' },
+					'50%': { transform: 'rotate(10deg)' },
+				}
+			},
+			animation: {
+				wiggle: 'wiggle 0.75s ease-in-out infinite',
+			},
 			// fontFamily: {
 			// 	'mono': ['monospace'] // ['"JetBrains Mono"']
 			// },
@@ -17,6 +26,7 @@ export default {
 		},
 	},
 	plugins: [
-		require('@tailwindcss/typography')
+		require('@tailwindcss/typography'),
+		require('tailwind-scrollbar'),
 	],
 }
