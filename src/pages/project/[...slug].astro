@@ -1,0 +1,26 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import Project from "@layouts/Project.astro";
+
+export async function getStaticPaths() {
+	const projects = await getCollection("project");
+	return projects.map((project) => {
+		return {
+			params: { slug: project.slug },
+			props: project,
+		};
+	});
+}
+type Props = CollectionEntry<"post">;
+
+const post = Astro.props;
+const { Content, remarkPluginFrontmatter, headings } = await post.render();
+
+// const { Content, remarkPluginFrontmatter } = await entry.render();
+---
+
+<Project minutesRead={remarkPluginFrontmatter.minutesRead} slug={post.slug} data={post.data} headings={headings}>
+	<div class="">
+		<Content />
+	</div>
+</Project>

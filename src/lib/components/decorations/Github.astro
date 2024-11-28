@@ -1,0 +1,110 @@
+---
+import { Octokit } from "@octokit/core";
+import { BASE_GITHUB_USER } from "@consts";
+
+import GithubDark from "@components/langLogos/Github-Dark.svg";
+import GithubLight from "@components/langLogos/Github-Light.svg";
+
+import SvelteLight from "@components/langLogos/Svelte.svg";
+import SvelteDark from "@components/langLogos/Svelte.svg";
+import DockerDark from "@components/langLogos/Docker-Dark.svg";
+import DockerLight from "@components/langLogos/Docker-Light.svg";
+import Javascript from "@components/langLogos/Javascript.svg";
+import Typescript from "@components/langLogos/Typescript.svg";
+import Python from "@components/langLogos/Python.svg";
+import Makefile from "@components/langLogos/Makefile.svg";
+import HTML from "@components/langLogos/HTML.svg";
+
+const PRIVATE_GHAT = import.meta.env.PRIVATE_GHAT;
+
+type Props = {
+  repo: string | { repo: string; user: string };
+};
+
+const { repo } = Astro.props;
+
+console.log(repo);
+
+// Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
+const octokit = new Octokit({ auth: PRIVATE_GHAT });
+
+const response = await octokit.request("GET /repos/{owner}/{repo}", {
+  owner: typeof repo === "string" ? BASE_GITHUB_USER : repo.user,
+  repo: typeof repo === "string" ? repo : repo.repo,
+});
+
+const langsRaw = await octokit.request("GET /repos/{owner}/{repo}/languages", {
+  owner: typeof repo === "string" ? BASE_GITHUB_USER : repo.user,
+  repo: typeof repo === "string" ? repo : repo.repo,
+});
+
+if (response.status !== 200 || langsRaw.status !== 200)
+  throw new Error(
+    `Could not get data for the repo: '${typeof repo === "string" ? repo : JSON.stringify(repo)}'`,
+  );
+
+const langsData = langsRaw.data as { [key: string]: number };
+
+let langSrc: {light: string, dark: string, lang: string }[] = [];
+let langList: {lang: string, value: number}[] = [];
+
+for (const key of Object.keys(langsData)) langList.push({ lang: key, value: langsData[key] });
+
+langList.sort((a, b) => b.value - a.value);
+
+for (let i = 0; i < langList.length && i < 2; i++) {
+  const lang = langList[i];
+  switch (lang.lang) {
+    case "Svelte":
+      langSrc.push({ light: SvelteLight.src, dark: SvelteDark.src, lang: lang.lang });
+      break;
+    case "Dockerfile":
+      langSrc.push({ light: DockerLight.src, dark: DockerDark.src, lang: lang.lang });
+      break;
+    case "Javascript":
+    case "JavaScript":
+    case "js":
+      langSrc.push({ light: Javascript.src, dark: Javascript.src, lang: lang.lang });
+      break;
+    case "Typescript":
+    case "TypeScript":
+    case "ts":
+      langSrc.push({ light: Typescript.src, dark: Typescript.src, lang: lang.lang });
+      break;
+    case "Python":
+      langSrc.push({ light: Python.src, dark: Python.src, lang: lang.lang });
+      break;
+    case "Makefile":
+      langSrc.push({ light: Makefile.src, dark: Makefile.src, lang: lang.lang });
+      break;
+    case "HTML":
+      langSrc.push({ light: HTML.src, dark: HTML.src, lang: lang.lang });
+      break;
+    default:
+      throw new Error(`Unimplemented Lang Logo: ${lang.lang}`);
+  }
+}
+
+const href = `https://github.com/${typeof repo === "string" ? BASE_GITHUB_USER : repo.user}/${typeof repo === "string" ? repo : repo.repo}`;
+
+---
+
+<a href={href} target="_blank" class="flex flex-row gap-4 items-center group !no-underline text-current border border-neutral-200 dark:border-neutral-800 p-2 sm:p-4 rounded-xl hover:bg-neutral-950/50 transition-colors">
+  <div class="hidden md:flex prose-img:rounded-none prose-img:my-0 flex-col gap-1 flex-shrink">
+    <div class="flex flex-row w-full items-center justify-start gap-2">
+      <div class="hidden lg:flex flex-row items-center gap-2 border-r border-neutral-200 dark:border-neutral-800 pr-2">
+        {langSrc.map((v) => 
+          <img class="w-5 !rounded-none hidden dark:inline-flex" title={v.lang} src={v.dark}/>
+          <img class="w-5 !rounded-none dark:hidden" title={v.lang} src={v.light} />
+        )}
+      </div>
+      <span class="flex-grow font-mono uppercase tracking-widest font-bold transition-colors group-hover:text-amber-500">{response.data.name}</span>
+    </div>
+    <div class="hidden lg:block text-xs max-w-96 whitespace-nowrap text-ellipsis overflow-hidden">{response.data.description}</div>
+  </div>
+  <div class="hidden md:block h-12 border-r border-neutral-200 dark:border-neutral-800"></div>
+  <div class="aspect-square flex-shrink-0">
+    <img class="h-6 sm:h-12 my-0 aspect-square hidden dark:inline-flex" src={GithubDark.src}/>
+    <img class="h-6 sm:h-12 my-0 aspect-square dark:hidden" src={GithubLight.src} />
+  </div>
+</a>

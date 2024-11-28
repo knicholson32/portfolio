@@ -49,6 +49,7 @@ jobs:
     env:
       PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
       PUBLIC_ENV: testing
+      PRIVATE_GHAT: ${{ secrets.GHAT }}
     timeout-minutes: 10
     runs-on: ubuntu-latest
     # github.ref == 'refs/heads/master'
@@ -93,6 +94,7 @@ jobs:
     env:
       PUBLIC_URL: ${{ github.ref == 'refs/heads/main' && vars.MAIN_URL || vars.DEV_URL }}
       PUBLIC_ENV: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
+      PRIVATE_GHAT: ${{ secrets.GHAT }}
     environment:
       # https://github.com/orgs/community/discussions/56123
       name: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}

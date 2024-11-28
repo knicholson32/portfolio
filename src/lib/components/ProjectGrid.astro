@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ProjectPreview from "./ProjectPreview.astro";
+
+type Props = {
+  projects: { minutesRead?: string; post: CollectionEntry<"project"> }[];
+};
+
+const { projects } = Astro.props;
+---
+
+<div class="grid grid-cols-1 gap-6 xs:grid-cols-2 md:grid-cols-3 max-w-7xl">
+  {
+    projects.map((project) => (
+      <ProjectPreview project={project.post} minutesRead={project.minutesRead} />
+    ))
+  }
+</div>
