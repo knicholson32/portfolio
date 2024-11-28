@@ -9,7 +9,7 @@ import Tag from "@components/Tag.astro";
 import ViewTransitionLimiter from "@components/svelte/ViewTransitionLimiter.svelte";
 import { SITE_TITLE } from "@consts";
 import type { MarkdownHeading } from "node_modules/astro/dist/@types/astro";
-import TableOfContents from "@components/decorations/TableOfContents.astro";
+import TableOfContents from "@components/svelte/decorations/TableOfContents.svelte";
 
 type Props = {
 	minutesRead: string | undefined;
@@ -30,10 +30,19 @@ const aspectRatio =
 
 ---
 
+<!-- <style is:global>
+	.highlight:last-of-type {
+		background-color: #ff0000;
+	}
+
+	/* .highlight:not(:has(~ .highlight)) {
+		background-color: #ff0000;
+	} */
+</style> -->
+
 <BaseHTML>
-	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image.img.src} type="article"
-	/>
-	<article class="w-full max-w-6xl">
+	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image.img.src} type="article" />
+	<article class="w-full px-4 md:pr-48 2xl:pr-4 2xl:max-w-5xl">
 		<ViewTransitionLimiter client:idle slug={slug}>
 			<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="object-cover z-10" loading={"eager"} alt="Cover image" 
 			/>
@@ -41,7 +50,7 @@ const aspectRatio =
 		<div class="">
 			<div class="title relative flex flex-row items-center">
 				<div>
-					<h1 class="mb-2 text-xl xs:text-3xl sm:text-4xl">{data.title}</h1>
+					<h1 id="overview" class="mb-2 text-xl xs:text-3xl sm:text-4xl scroll-m-96">{data.title}</h1>
 					<div class="flex flex-row items-center gap-1 whitespace-nowrap">
 						<FormattedDate date={data.pubDate} />
 						<div class="hidden sm:inline-flex gap-1 items-center">{
@@ -64,8 +73,8 @@ const aspectRatio =
 					</div>
 				: ""}
 			</div>
-			<hr class="py-0 mt-4 mb-2 border-neutral-200 dark:border-neutral-800" />
-			<TableOfContents headings={headings} />
+			<TableOfContents headings={headings} client:idle />
+			<hr class="py-0 mt-2 mb-2 border-neutral-200 dark:border-neutral-800" />
 			<slot />
 		</div>
 	</article>

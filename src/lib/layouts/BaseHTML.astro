@@ -9,7 +9,11 @@ interface Props {
   pageType?: "devlog";
 }
 
-const { class: className, useViewTransitions = true, pageType = "devlog" } = Astro.props;
+const {
+  class: className,
+  useViewTransitions = true,
+  pageType = "devlog",
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -19,15 +23,13 @@ const { class: className, useViewTransitions = true, pageType = "devlog" } = Ast
     {useViewTransitions ? <ViewTransitions /> : ""}
   </head>
 
-  <body class="relative bg-neutral-50 dark:bg-neutral-900">
+  <body class="bg-neutral-50 dark:bg-neutral-900 ">
     <Header title={pageType} />
-    <main class="flex flex-col w-full items-center py-6">
-      <div
-        class="prose dark:prose-invert prose-amber prose-img:rounded-xl p-4 overflow-x-hidden max-w-full"
-      >
+    <main id="main" class="absolute top-16 xl:top-20 bottom-0 left-0 right-0 overflow-y-auto py-6">
+      <div class="h-fit w-full flex flex-col items-center prose dark:prose-invert prose-amber prose-img:rounded-xl prose-h2:scroll-m-6 prose-h3:scroll-m-6 prose-h4:scroll-m-4 prose-h5:scroll-m-1 prose-h6:scroll-m-1 p-4 max-w-full">
         <slot />
       </div>
+      <Footer />
     </main>
-    <Footer />
   </body>
 </html>
