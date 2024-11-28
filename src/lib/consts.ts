@@ -3,3 +3,4 @@
 
 export const SITE_TITLE = 'Keenan Nicholson';
 export const SITE_DESCRIPTION = 'Welcome to my website!';
+export const BASE_GITHUB_USER = 'knicholson32';

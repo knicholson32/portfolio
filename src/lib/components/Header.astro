@@ -14,13 +14,18 @@ const { title = "devlog" } = Astro.props;
 >
 	<nav class="flex align-middle justify-between">
 		<h2 class="m-0 text-lg uppercase font-bold">
-			<a class="inline-flex items-center gap-1" href="/"><span class="text-sm hidden lg:block">Keenan</span><span class="font-mono">|</span><span class="text-amber-500">{title}</span></a>
+			<a class="inline-flex items-center gap-1" href="/"
+				><span class="text-sm hidden lg:block">Keenan</span><span
+					class="font-mono">|</span
+				><span class="text-amber-500">{title}</span></a
+			>
 		</h2>
 		<div
-			class="internal-links flex flex-row gap-2 uppercase opacity-80 font-light"
+			class="internal-links flex flex-row gap-2 uppercase opacity-100 font-light"
 		>
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/post">Posts</HeaderLink>
+			<HeaderLink href="/project">Projects</HeaderLink>
 			<!-- <HeaderLink href="/about">About</HeaderLink> -->
 		</div>
 	</nav>

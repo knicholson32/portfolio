@@ -1,0 +1,59 @@
+---
+import BaseHead from "@components/BaseHead.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "@consts";
+import { getCollection } from "astro:content";
+import BaseHTML from "@layouts/BaseHTML.astro";
+import ProjectGrid from "@components/ProjectGrid.astro";
+import Tag from "@components/Tag.astro";
+
+const projects = (await getCollection("project")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const projectsWithRenderProps = await Promise.all(
+	projects.map(async (project) => {
+		const { remarkPluginFrontmatter } = await project.render();
+		return {
+			post: project,
+			minutesRead: remarkPluginFrontmatter.minutesRead as string | undefined,
+		};
+	}),
+);
+
+const tags: { [key: string]: { projects: number } } = {};
+
+for (const project of projects) {
+	if (project.data.tags !== undefined) {
+		for (const t of project.data.tags) {
+			const tag = t.toLowerCase();
+			if (tag in tags) {
+				tags[tag].projects++;
+			} else {
+				tags[tag] = { projects: 1 };
+			}
+		}
+	}
+}
+---
+
+<BaseHTML>
+	<BaseHead
+		slot="header"
+		title={"Projects | " + SITE_TITLE}
+		description={SITE_DESCRIPTION}
+	/>
+	<div class="w-full flex flex-row gap-2 justify-start">
+		<div class="flex-grow">
+			<h1 class="mb-3">Project Tags</h1>
+			<div class="flex flex-row flex-wrap gap-2">
+				{
+					Object.keys(tags).map((tagKey) => (
+						<Tag tag={tagKey} num={tags[tagKey].projects} />
+					))
+				}
+			</div>
+		</div>
+	</div>
+	<hr class="py-0 my-4 w-full border-neutral-200 dark:border-neutral-800" />
+	<ProjectGrid projects={projectsWithRenderProps} />
+</BaseHTML>

@@ -17,7 +17,13 @@ const post = defineCollection({
 			alt: z.string(),
 			aspect: z.number().optional()
 		}),
-		repo: z.string().optional(),
+		repo: z.union([
+			z.string(),
+			z.object({
+				user: z.string(),
+				repo: z.string()
+			})
+		]).optional(),
 		tags: z.array(z.string()).optional(),
 		related: z.array(z.string()).optional(),
 		minutesRead: z.string().optional()
@@ -34,11 +40,23 @@ const project = defineCollection({
 		pubDate: z.coerce.date(),
 		updatedDate: z.coerce.date().optional(),
 		// heroImage: z.string().optional(),
-		heroImage: image().refine((img) => img.width >= 1080, {
-			message: "Cover image must be at least 1080 pixels wide!",
+		image: z.object({
+			img: image().refine((img) => img.width >= 1080, {
+				message: "Cover image must be at least 1080 pixels wide!",
+			}),
+			alt: z.string(),
+			aspect: z.number().optional()
 		}),
-		// coverAlt: z.string(),
-		aspect: z.number().optional()
+		repo: z.union([
+			z.string(),
+			z.object({
+				user: z.string(),
+				repo: z.string()
+			})
+		]).optional(),
+		tags: z.array(z.string()).optional(),
+		related: z.array(z.string()).optional(),
+		minutesRead: z.string().optional()
 	}),
 });
 
