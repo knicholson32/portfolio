@@ -9,208 +9,73 @@ image:
 repo: docker-node-template
 ---
 
-Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.
+import Video from '@components/Video.astro';
 
-## Headings
+[Docker Node Template](https://github.com/knicholson32/docker-node-template) is a template repository for developing Docker Containers that run a NodeJS service. 
 
-The following HTML `<h1>`—`<h6>` elements represent six levels of section headings. `<h1>` is the highest section level while `<h6>` is the lowest.
+Many times, I have needed to create a NodeJS service that can be easily ran via a Docker Container. After maybe the 5th time creating an entire development pipeline from scratch, I decided to create this template repo. 
 
-## H2
+### Goals
 
-### H3
+I wanted this template to be easy to use, with as much pre-configured as possible. I also wanted hot-reloading with in-container development.
 
-#### H4
+## Features
 
-##### H5
+* `Typescript` support
+* Hot-Reloading in development
+* Development inside a docker-container (similar to production environment)
+* GitHub Actions to compile and upload containers to registry (Dockerhub and GitHub)
+* `linux/amd64` and `linux/arm64` default targets
+* `pnpm` for NodeJS package management
 
-###### H6
+## Developmental Benifits
 
-## Paragraph
+### Hot-Reloading
 
-Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga. Ri oditatquam, ad quibus unda veliamenimin cusam et facea ipsamus es exerum sitate dolores editium rerore eost, temped molorro ratiae volorro te reribus dolorer sperchicium faceata tiustia prat.
+`ESBuild` is used to compile `Typescript` files and to watch for file changes and reload. This makes if very easy and fast to develop; each time a file is modified, the entire stack is reloaded.
 
-Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sapicia is sinveli squiatum, core et que aut hariosam ex eat.
+Additionally, files are 'compressed' to one output file, where possible, even during the hot-reloading development phase. This means that the code being written is being ran in the same format it will be ran in the production environment.
 
-## Images
+<figure class="bench" style="position:relative;max-width:800px;height:130px;font-size:13px;line-height:20px;">
+  <div style="position:absolute;left:90px;top:0;right:0;height:80px;"><div style="position:absolute;left:0.00%;top:0;width:1px;bottom:0;background:rgba(127,127,127,0.25);"></div><div style="position:absolute;left:20.85%;top:0;width:1px;bottom:0;background:rgba(127,127,127,0.25);"></div><div style="position:absolute;left:41.70%;top:0;width:1px;bottom:0;background:rgba(127,127,127,0.25);"></div><div style="position:absolute;left:62.54%;top:0;width:1px;bottom:0;background:rgba(127,127,127,0.25);"></div><div style="position:absolute;left:83.39%;top:0;width:1px;bottom:0;background:rgba(127,127,127,0.25);"></div><div style="position:absolute;left:0;top:3px;width:0.81%;height:14px;background:rgba(191,191,191,0.2);"></div><div style="position:absolute;left:0;top:3px;width:0.81%;height:14px;background:#FFCF00;" class="bench0-bar0"></div><div style="position:absolute;right:100%;top:0px;width:90px;height:20px;text-align:right;white-space:nowrap;margin-right:8px;font-weight:bold;"><a href="https://esbuild.github.io/">esbuild</a></div><div style="position:absolute;left:0.81%;top:0px;height:20px;margin-left:8px;font-weight:bold;">0.39s</div><div style="position:absolute;left:0;top:23px;width:31.08%;height:14px;background:rgba(191,191,191,0.2);"></div><div style="position:absolute;left:0;top:23px;width:31.08%;height:14px;background:#FFCF00;" class="bench0-bar1"></div><div style="position:absolute;right:100%;top:20px;width:90px;height:20px;text-align:right;white-space:nowrap;margin-right:8px;"><a href="https://parceljs.org/">parcel 2</a></div><div style="position:absolute;left:31.08%;top:20px;height:20px;margin-left:8px;">14.91s</div><div style="position:absolute;left:0;top:43px;width:71.09%;height:14px;background:rgba(191,191,191,0.2);"></div><div style="position:absolute;left:0;top:43px;width:71.09%;height:14px;background:#FFCF00;" class="bench0-bar2"></div><div style="position:absolute;right:100%;top:40px;width:90px;height:20px;text-align:right;white-space:nowrap;margin-right:8px;"><a href="https://rollupjs.org/">rollup 4</a></div><div style="position:absolute;left:71.09%;top:40px;height:20px;margin-left:8px;">34.10s</div><div style="position:absolute;left:0;top:63px;width:85.92%;height:14px;background:rgba(191,191,191,0.2);"></div><div style="position:absolute;left:0;top:63px;width:85.92%;height:14px;background:#FFCF00;" class="bench0-bar3"></div><div style="position:absolute;right:100%;top:60px;width:90px;height:20px;text-align:right;white-space:nowrap;margin-right:8px;"><a href="https://webpack.js.org/">webpack 5</a></div><div style="position:absolute;left:85.92%;top:60px;height:20px;margin-left:8px;">41.21s</div><div style="position:absolute;left:0.00%;top:84px;width:50px;margin-left:-25px;text-align:center;">0s</div><div style="position:absolute;left:20.85%;top:84px;width:50px;margin-left:-25px;text-align:center;">10s</div><div style="position:absolute;left:41.70%;top:84px;width:50px;margin-left:-25px;text-align:center;">20s</div><div style="position:absolute;left:62.54%;top:84px;width:50px;margin-left:-25px;text-align:center;">30s</div><div style="position:absolute;left:83.39%;top:84px;width:50px;margin-left:-25px;text-align:center;">40s</div></div>
+  <figcaption class="absolute bottom-0 left-0 right-0 text-center">[ESBuild compile times vs. some other options](https://esbuild.github.io/)</figcaption>
+</figure>
 
-### Syntax
+`ESBuild` packages files together pretty darn fast. In my usage of this template, I haven't noticed the compile-time during development. 
 
-```markdown
-![Alt text](./full/or/relative/path/of/image)
+### In-Container Development
+
+One of the primary benefits of Docker Containers (or containerization in general, for that matter), is that is runs the same on whatever machine it is deployed to. 
+
+The issue is that these benefits only work inside the container, and developing a NodeJS service on your local machine might not run exactly the same inside a container. This template removes this issue by having the developmental code ran _inside_ the container as it is edited, with full hot-reloading support.
+
+#### Connecting the Container and Dev Code
+
+During development, a dev container is created and ran, with a mount `node_modules` and the top-level directory. This means that as files are edited, the container 'sees' those same edits. `ESBuild` is ran inside the container and watches for file changes, enabling hot-reloading.
+
+## Usage
+
+Besides the usual NodeJS and `Typescript` developmental steps, the dev environment must be built:
+
+```Shell
+# Start dev environment and hot-reload with ESBuild
+make dev
 ```
 
-### Output
+To create a local export of the container that will be uploaded to the container registries, run the following command:
 
-![blog placeholder](/blog-placeholder-about.jpg)
-
-## Blockquotes
-
-The blockquote element represents content that is quoted from another source, optionally with a citation which must be within a `footer` or `cite` element, and optionally with in-line changes such as annotations and abbreviations.
-
-### Blockquote without attribution
-
-#### Syntax
-
-```markdown
-> Tiam, ad mint andaepu dandae nostion secatur sequo quae.  
-> **Note** that you can use _Markdown syntax_ within a blockquote.
+```Shell
+# Build the full image and host it locally
+make create-local && make local
 ```
 
-#### Output
+This will create and run the container locally.
 
-> Tiam, ad mint andaepu dandae nostion secatur sequo quae.  
-> **Note** that you can use _Markdown syntax_ within a blockquote.
+<Video caption="Create the dev environment, and edit files. Hot-reloading is automatic." src="/public/videos/projects/docker-node-template/docker-node-template-demo"/>
 
-### Blockquote with attribution
+## Repo Configuration
 
-#### Syntax
+GitHub Actions are used to build the source code into containers and push those containers to Dockerhub and the GitHub registry ([ghcr.io](https://ghcr.io/)). Additionally, the Dockerhub readme and description is copied from the repo.
 
-```markdown
-> Don't communicate by sharing memory, share memory by communicating.<br/>
-> — <cite>Rob Pike[^1]</cite>
-```
+In order to facilitate these functions, multiple repo variables must be set. See [documentation](https://github.com/knicholson32/docker-node-template?tab=readme-ov-file#repo-configuration) for more details.
 
-#### Output
-
-> Don't communicate by sharing memory, share memory by communicating.<br/>
-> — <cite>Rob Pike[^1]</cite>
-
-[^1]: The above quote is excerpted from Rob Pike's [talk](https://www.youtube.com/watch?v=PAAkCSZUG1c) during Gopherfest, November 18, 2015.
-
-## Tables
-
-### Syntax
-
-```markdown
-| Italics   | Bold     | Code   |
-| --------- | -------- | ------ |
-| _italics_ | **bold** | `code` |
-```
-
-### Output
-
-| Italics   | Bold     | Code   |
-| --------- | -------- | ------ |
-| _italics_ | **bold** | `code` |
-
-## Code Blocks
-
-### Syntax
-
-we can use 3 backticks ``` in new line and write snippet and close with 3 backticks on new line and to highlight language specific syntax, write one word of language name after first 3 backticks, for eg. html, javascript, css, markdown, typescript, txt, bash
-
-````markdown
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Example HTML5 Document</title>
-  </head>
-  <body>
-    <p>Test</p>
-  </body>
-</html>
-```
-````
-
-### Output
-
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Example HTML5 Document</title>
-  </head>
-  <body>
-    <p>Test</p>
-  </body>
-</html>
-```
-
-## List Types
-
-### Ordered List
-
-#### Syntax
-
-```markdown
-1. First item
-2. Second item
-3. Third item
-```
-
-#### Output
-
-1. First item
-2. Second item
-3. Third item
-
-### Unordered List
-
-#### Syntax
-
-```markdown
-- List item
-- Another item
-- And another item
-```
-
-#### Output
-
-- List item
-- Another item
-- And another item
-
-### Nested list
-
-#### Syntax
-
-```markdown
-- Fruit
-  - Apple
-  - Orange
-  - Banana
-- Dairy
-  - Milk
-  - Cheese
-```
-
-#### Output
-
-- Fruit
-  - Apple
-  - Orange
-  - Banana
-- Dairy
-  - Milk
-  - Cheese
-
-## Other Elements — abbr, sub, sup, kbd, mark
-
-### Syntax
-
-```markdown
-<abbr title="Graphics Interchange Format">GIF</abbr> is a bitmap image format.
-
-H<sub>2</sub>O
-
-X<sup>n</sup> + Y<sup>n</sup> = Z<sup>n</sup>
-
-Press <kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>Delete</kbd> to end the session.
-
-Most <mark>salamanders</mark> are nocturnal, and hunt for insects, worms, and other small creatures.
-```
-
-### Output
-
-<abbr title="Graphics Interchange Format">GIF</abbr> is a bitmap image format.
-
-H<sub>2</sub>O
-
-X<sup>n</sup> + Y<sup>n</sup> = Z<sup>n</sup>
-
-Press <kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>Delete</kbd> to end the session.
-
-Most <mark>salamanders</mark> are nocturnal, and hunt for insects, worms, and other small creatures.

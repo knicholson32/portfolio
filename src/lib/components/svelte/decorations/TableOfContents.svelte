@@ -66,17 +66,23 @@
   onMount(() => {
     const main = document.getElementById('main') as HTMLDivElement;
     main.addEventListener("scroll", (event) => scrollValue = main.scrollTop);
+    console.log('mounted!');
   })
+
+  const menuClick = () => {
+    tocOpen = !tocOpen;
+    console.log(tocOpen);
+  }
 
 </script>
 
-<hr class="md:hidden py-0 my-4 border-neutral-200 dark:border-neutral-800" />
-<nav class="relative md:fixed text-xs md:right-0 md:top-12 xl:top-16 md:bottom-0 md:w-48 2xl:w-auto 2xl:max-w-[calc(50vw-(64rem/2)-1.5rem)] md:border-l border-neutral-200 dark:border-neutral-800 pb-2 md:p-4 md:pt-6">
-  <span class="hidden md:block text-lg font-medium text-amber-500 w-full text-left">On this page</span>
-  <div class="hidden sm:block md:hidden text-lg font-normal tracking-widest text-amber-500 w-full text-center uppercase">Table of Contents</div>
+ <!-- 2xl:max-w-[calc(50vw-(64rem/2)-1.5rem)] -->
+<nav class="relative text-xs pb-2 sm:p-4 sm:pt-6 select-none" onclick={menuClick} role="presentation">
+  <span class="hidden sm:block text-lg font-medium text-amber-500 w-full text-left">On this page</span>
+  <!-- <div class="hidden sm:hidden text-lg font-normal tracking-widest text-amber-500 w-full text-center uppercase">Table of Contents</div> -->
   <div class="sm:hidden text-lg font-normal tracking-widest text-amber-500 w-full text-center uppercase">Contents</div>
-  <button class="md:hidden absolute right-0 top-0" onclick={() => tocOpen = !tocOpen}><Menu class="w-6"/></button>
-  <ul class="list-none my-0 px-1 pr-2 {!tocOpen ? 'hidden' : ''} md:block">
+  <button class="sm:hidden absolute right-0 top-0"><Menu class="w-6"/></button>
+  <ul class="list-none my-0 px-1 pr-2 {!tocOpen ? 'hidden' : ''} sm:block">
     {#each contents as heading}
       <TableOfContentsHeading heading={heading} bind:flatHeadings bind:scrollValue />
     {/each}
