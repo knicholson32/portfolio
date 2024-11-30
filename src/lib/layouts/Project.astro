@@ -10,6 +10,8 @@ import ViewTransitionLimiter from "@components/svelte/ViewTransitionLimiter.svel
 import { SITE_TITLE } from "@consts";
 import type { MarkdownHeading } from "node_modules/astro/dist/@types/astro";
 import TableOfContents from "@components/svelte/decorations/TableOfContents.svelte";
+import Sidebar from "@components/Sidebar.astro";
+import CenterContent from '@components/CenterContent.astro';
 
 type Props = {
 	minutesRead: string | undefined;
@@ -42,7 +44,7 @@ const aspectRatio =
 
 <BaseHTML>
 	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image.img.src} type="article" />
-	<article class="w-full px-4 md:pr-48 2xl:pr-4 2xl:max-w-5xl">
+	<CenterContent>
 		<ViewTransitionLimiter client:idle slug={slug}>
 			<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="object-cover z-10" loading={"eager"} alt="Cover image" 
 			/>
@@ -73,9 +75,14 @@ const aspectRatio =
 					</div>
 				: ""}
 			</div>
-			<TableOfContents headings={headings} client:idle />
 			<hr class="py-0 mt-2 mb-2 border-neutral-200 dark:border-neutral-800" />
+			<Sidebar side="right">
+				<TableOfContents headings={headings} client:idle />
+			</Sidebar>
+			<Sidebar side="left">
+				
+			</Sidebar>
 			<slot />
 		</div>
-	</article>
+	<CenterContent/>
 </BaseHTML>

@@ -89,8 +89,8 @@ const href = `https://github.com/${typeof repo === "string" ? BASE_GITHUB_USER :
 
 ---
 
-<a href={href} target="_blank" class="flex flex-row gap-4 items-center group !no-underline text-current border border-neutral-200 dark:border-neutral-800 p-2 sm:p-4 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-950/50 transition-colors">
-  <div class="hidden md:flex prose-img:rounded-none prose-img:my-0 flex-col gap-1 flex-shrink">
+<a href={href} target="_blank" class="flex flex-row gap-4 items-center group !no-underline text-current lg:border border-neutral-200 dark:border-neutral-800 p-2 xl:p-4 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-950/50 transition-colors">
+  <div class="hidden xl:flex prose-img:rounded-none prose-img:my-0 flex-col gap-1 flex-shrink max-w-72">
     <div class="flex flex-row w-full items-center justify-start gap-2">
       <div class="hidden lg:flex flex-row items-center gap-2 border-r border-neutral-200 dark:border-neutral-800 pr-2">
         {langSrc.map((v) => 
@@ -98,13 +98,13 @@ const href = `https://github.com/${typeof repo === "string" ? BASE_GITHUB_USER :
           <img class="w-5 !rounded-none dark:hidden" title={v.lang} src={v.light} />
         )}
       </div>
-      <span class="flex-grow font-mono uppercase tracking-widest font-bold transition-colors group-hover:text-amber-500">{response.data.name}</span>
+      <span class="flex-grow font-mono uppercase tracking-widest font-bold transition-colors group-hover:text-amber-500 whitespace-nowrap text-ellipsis overflow-hidden">{response.data.name}</span>
     </div>
     <div class="hidden lg:block text-xs max-w-96 whitespace-nowrap text-ellipsis overflow-hidden">{response.data.description}</div>
   </div>
-  <div class="hidden md:block h-12 border-r border-neutral-200 dark:border-neutral-800"></div>
+  <div class="hidden xl:block h-12 border-r flex-shrink-0 w-fit border-neutral-200 dark:border-neutral-800"></div>
   <div class="aspect-square flex-shrink-0">
-    <img class="h-6 sm:h-12 my-0 aspect-square hidden dark:inline-flex" src={GithubDark.src}/>
-    <img class="h-6 sm:h-12 my-0 aspect-square dark:hidden" src={GithubLight.src} />
+    <img class="h-6 lg:h-12 my-0 aspect-square hidden dark:inline-flex" src={GithubDark.src}/>
+    <img class="h-6 lg:h-12 my-0 aspect-square dark:hidden" src={GithubLight.src} />
   </div>
 </a>

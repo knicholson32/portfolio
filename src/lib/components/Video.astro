@@ -1,0 +1,19 @@
+---
+type Props = {
+  src: string;
+  caption: string;
+};
+
+const { src, caption } = Astro.props;
+
+const srcMP4 = `${src}.mp4`;
+const srcAVI = `${src}.avi`;
+---
+
+<div class="w-full flex flex-col gap-1">
+  <video class="mb-0 rounded-lg overflow-hidden" autoplay loop muted>
+    <source src={srcAVI} type="video/avi" />
+    <source src={srcMP4} type="video/mp4" />
+  </video>
+  <div class="w-full text-center text-xs">{caption}</div>
+</div>
