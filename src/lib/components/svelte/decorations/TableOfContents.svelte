@@ -2,7 +2,7 @@
   import type { MarkdownHeading } from "node_modules/astro/dist/@types/astro";
   import TableOfContentsHeading from "./TableOfContentsHeading.svelte";
   import { onMount } from "svelte";
-  import Menu from 'lucide-svelte/icons/menu';
+  import ChevronRight from 'lucide-svelte/icons/chevron-right';
 
   type Props = {
     headings: MarkdownHeading[];
@@ -81,7 +81,9 @@
   <span class="hidden sm:block text-lg font-medium text-amber-500 w-full text-left">On this page</span>
   <!-- <div class="hidden sm:hidden text-lg font-normal tracking-widest text-amber-500 w-full text-center uppercase">Table of Contents</div> -->
   <div class="sm:hidden text-lg font-normal tracking-widest text-amber-500 w-full text-center uppercase">Contents</div>
-  <button class="sm:hidden absolute right-0 top-0"><Menu class="w-6"/></button>
+  <button class="sm:hidden absolute right-0 top-0.5 inline-flex items-center justify-center">
+    <ChevronRight class="w-4 {tocOpen ? 'rotate-90' : 'rotate-0'}"/>
+  </button>
   <ul class="list-none my-0 px-1 pr-2 {!tocOpen ? 'hidden' : ''} sm:block">
     {#each contents as heading}
       <TableOfContentsHeading heading={heading} bind:flatHeadings bind:scrollValue />

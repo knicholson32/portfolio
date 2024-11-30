@@ -3,7 +3,7 @@ import BaseHead from "@components/BaseHead.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@consts";
 import { getCollection } from "astro:content";
 import BaseHTML from "@layouts/BaseHTML.astro";
-import ProjectGrid from "@components/ProjectGrid.astro";
+import ProjectGrid from "@components/project/ProjectGrid.astro";
 import Tag from "@components/Tag.astro";
 
 const projects = (await getCollection("project")).sort(

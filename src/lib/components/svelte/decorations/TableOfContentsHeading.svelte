@@ -52,7 +52,7 @@
 </script>
 
 <li class="pt-1 my-0 py-0 px-0 overflow-hidden text-ellipsis">
-  <a bind:this={anchor} class="no-underline tracking-wider whitespace-nowrap {heading.depth === 2 ? textFormatH2 : textFormatNormal} sm:font-normal sm:dark:font-light sm:text-neutral-400 sm:dark:text-neutral-500 {highlight ? 'sm:!text-amber-500 sm:dark:!text-amber-500' : ''}" href={"#" + heading.slug}>
+  <a bind:this={anchor} class="no-underline tracking-wider whitespace-nowrap {heading.depth === 2 ? textFormatH2 : textFormatNormal} sm:font-normal sm:dark:font-light sm:text-neutral-400 sm:dark:text-neutral-500 sm:hover:text-neutral-950 sm:hover:dark:text-neutral-200 {highlight ? 'sm:!text-amber-500 sm:dark:!text-amber-500' : ''}" href={"#" + heading.slug}>
     {heading.text}
   </a>
   {#if heading.subheadings.length > 0}

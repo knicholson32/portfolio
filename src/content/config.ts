@@ -54,6 +54,14 @@ const project = defineCollection({
 				repo: z.string()
 			})
 		]).optional(),
+		project: z.string().optional(),
+		chapter: z.union([
+			z.string(),
+			z.object({
+				id: z.string(),
+				order: z.number()
+			})
+		]).optional(),
 		tags: z.array(z.string()).optional(),
 		related: z.array(z.string()).optional(),
 		minutesRead: z.string().optional()

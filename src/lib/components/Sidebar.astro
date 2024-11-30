@@ -1,21 +1,24 @@
 ---
 type Props = {
   side: "left" | "right";
+  class?: string;
 };
 
-const { side } = Astro.props;
+const { side, class: classList } = Astro.props;
 ---
 
 <div
-  class:list={{
-    "hidden md:block": side === "left",
+  class:list={[{
+    "block md:fixed md:w-1/4 md:top-14": side === "left",
+    "block sm:fixed sm:w-1/4 sm:top-14": side === "right",
     "left-0": side === "left",
     "right-0": side === "right",
-    "sm:border-r": side === "left",
+    "md:border-r": side === "left",
     "sm:border-l": side === "right",
-  }}
-  class="relative sm:fixed sm:w-1/4 lg:w-1/6 2xl:w-72 h-full sm:-z-10 sm:top-14 xl:top-20 border-neutral-200 dark:border-neutral-800"
+    "sm:-z-10": side === "right",
+  }, classList ]}
+  class="relative lg:w-1/6 2xl:w-72 h-full xl:top-20 pt-1 border-neutral-200 dark:border-neutral-800"
 >
   <slot />
-  <hr class="sm:hidden py-0 mt-0 pt-0 border-neutral-200 dark:border-neutral-800" />
+  <hr class:list={{ 'sm:hidden': side==='right', 'md:hidden': side==='left' }}class=" my-0 py-0 border-neutral-200 dark:border-neutral-800" />
 </div>
