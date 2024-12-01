@@ -46,7 +46,7 @@ const project = defineCollection({
 			}),
 			alt: z.string(),
 			aspect: z.number().optional()
-		}),
+		}).optional(),
 		repo: z.union([
 			z.string(),
 			z.object({
@@ -54,7 +54,13 @@ const project = defineCollection({
 				repo: z.string()
 			})
 		]).optional(),
-		project: z.string().optional(),
+		project: z.union([
+			z.string(),
+			z.object({
+				id: z.string(),
+				useAsProjectPage: z.boolean()
+			})
+		]).optional(),
 		chapter: z.union([
 			z.string(),
 			z.object({

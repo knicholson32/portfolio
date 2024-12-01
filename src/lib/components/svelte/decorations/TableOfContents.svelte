@@ -66,13 +66,9 @@
   onMount(() => {
     const main = document.getElementById('main') as HTMLDivElement;
     main.addEventListener("scroll", (event) => scrollValue = main.scrollTop);
-    console.log('mounted!');
   })
 
-  const menuClick = () => {
-    tocOpen = !tocOpen;
-    console.log(tocOpen);
-  }
+  const menuClick = () => tocOpen = !tocOpen;
 
 </script>
 

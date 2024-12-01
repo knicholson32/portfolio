@@ -23,8 +23,6 @@ type Props = {
 
 const { repo } = Astro.props;
 
-console.log(repo);
-
 // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
 const octokit = new Octokit({ auth: PRIVATE_GHAT });
 

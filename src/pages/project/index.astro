@@ -6,9 +6,17 @@ import BaseHTML from "@layouts/BaseHTML.astro";
 import ProjectGrid from "@components/project/ProjectGrid.astro";
 import Tag from "@components/Tag.astro";
 
-const projects = (await getCollection("project")).sort(
+let projects = (await getCollection("project")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+projects = projects.filter((p) => {
+	const projectID = p.data.project === undefined ? undefined : typeof p.data.project === 'string' ? p.data.project : p.data.project.id;
+	const useAsProjectPage = p.data.project === undefined ? undefined : typeof p.data.project === 'string' ? false : p.data.project.useAsProjectPage;
+	return (
+		projectID === undefined || useAsProjectPage === true
+	);
+});
 
 const projectsWithRenderProps = await Promise.all(
 	projects.map(async (project) => {

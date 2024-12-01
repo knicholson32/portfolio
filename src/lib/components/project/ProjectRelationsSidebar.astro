@@ -26,20 +26,12 @@ const unChapteredList: {
   order?: number;
 }[] = [];
 
-const addToChapterList = (
-  relation: (typeof relations)[0],
-  chapterTitle?: string,
-) => {
-  const idx =
-    chapterTitle === undefined
-      ? -1
-      : chapterList.findIndex((v) => v.title === chapterTitle);
-  const relationOrder =
-    typeof relation.data.chapter === "object"
-      ? relation.data.chapter.order
-      : undefined;
+const addToChapterList = (relation: (typeof relations)[0], chapterTitle?: string) => {
+  const idx = chapterTitle === undefined ? -1 : chapterList.findIndex((v) => v.title === camelize(chapterTitle));
+  const relationOrder = typeof relation.data.chapter === "object" ? relation.data.chapter.order : undefined;
+  const useAsProjectPage = relation.data.project !== undefined && typeof relation.data.project !== 'string' && relation.data.project.useAsProjectPage;
   const entry = {
-    title: camelize(relation.data.title),
+    title: useAsProjectPage ? 'Overview' : camelize(relation.data.title),
     slug: relation.slug,
     order: relationOrder,
   };
@@ -62,9 +54,7 @@ for (const relation of relations) {
 
 for (const chapter of chapterList) chapter.entries.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 unChapteredList.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-console.log(chapterList, chapterOrder);
 if (chapterOrder.length > 0) chapterList.sort( (a, b) => chapterOrder.findIndex((v) => camelize(v) === a.title) - chapterOrder.findIndex((v) => camelize(v) === b.title));
-console.log(chapterList);
 ---
 
 <div class="w-full h-full overflow-y-scroll overflow-x-hidden md:pb-20">

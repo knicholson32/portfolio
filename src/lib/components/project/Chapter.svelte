@@ -1,6 +1,5 @@
 <script lang="ts">
   import ChevronRight from "lucide-svelte/icons/chevron-right";
-  import Dot from "lucide-svelte/icons/dot";
 
   let navOpen = $state(true);
 
@@ -29,10 +28,6 @@
 
 </script>
 
-<!-- {chapterContainsCurrent ? 'underline ' : ''} -->
-
-<!-- text-decoration: underline; text-decoration-style: wavy; -->
-
 <button class="flex flex-row items-center gap-1 w-full" onclick={() => navOpen = !navOpen}>
   <div class="relative text-lg font-medium w-full text-left whitespace-nowrap text-ellipsis overflow-hidden">
     {chapter.title}
@@ -56,7 +51,7 @@
       {:else}
         <li class="py-1 ml-1 overflow-hidden text-ellipsis">
           <a class="no-underline" href="/project/{entry.slug}">
-            <div class="no-underline tracking-wider whitespace-nowrap text-ellipsis overflow-hidden font-normal dark:font-light text-neutral-400 dark:text-neutral-500 hover:text-neutral-950 hover:dark:text-neutral-200">{entry.title}</div>
+            <div class="no-underline tracking-wider whitespace-nowrap text-ellipsis overflow-hidden font-normal dark:font-light text-neutral-400 dark:text-neutral-300 hover:text-neutral-950 hover:dark:text-white">{entry.title}</div>
           </a>    
         </li>
       {/if}
