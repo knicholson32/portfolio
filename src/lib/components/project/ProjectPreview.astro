@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@components/FormattedDate.astro";
+import Picture from "astro/components/Picture.astro";
+
+type Props = {
+  minutesRead: string | undefined;
+  project: CollectionEntry<"project">;
+};
+
+const { minutesRead, project } = Astro.props;
+---
+
+<div class="prose-a:no-underline prose-a:font-normal rounded-xl">
+  <a
+    href={`/project/${project.slug}/`}
+    class="flex flex-col gap-0 justify-center"
+  >
+    {
+      project.data.image !== undefined && (
+        <Picture
+          formats={["avif", "webp"]}
+          width={1024}
+          src={project.data.image.img}
+          style={`aspect-ratio: ${project.data.image.aspect ?? 2};`}
+          class="object-cover rounded-lg m-0 mb-2"
+          loading={"lazy"}
+          alt="Cover image"
+          transition:name={`img-${project.slug.replaceAll("/", "-")}`}
+        />
+      )
+    }
+    {
+      project.data.image === undefined && (
+        <div
+          class="aspect-[2] rounded-lg m-0 mt-8 mb-10"
+          style="background: rgb(34,193,195);
+background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);"
+        >
+          <div
+            class="w-full h-full rounded-lg opacity-20"
+            style={`
+              background: transparent;
+              background-attachment:fixed;
+              background-image: url(
+              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='20px' height='20px'> \
+              <style>text { font-family: monospace; } </style> \
+              <text x='0' y='20' style='fill:white; text-anchor: middle' font-size='12' transform='rotate(-40)'>${project.data.title.substring(0, 1).toUpperCase()}</text></svg>");
+            `}
+          />
+        </div>
+      )
+    }
+    <h1 class="mb-2 px-2 white text-left">{project.data.title}</h1>
+    <div
+      class="px-2 italic text-sm inline-flex gap-1 items-center overflow-x-hidden scrollbar-none"
+    >
+      <div class="inline-flex gap-1 items-center whitespace-nowrap">
+        <FormattedDate class="" date={project.data.pubDate} />
+        {minutesRead && <span class="text-xs text-neutral-500">•</span>}
+      </div>
+    </div>
+    <!-- <div class="flex flex-row gap-1 py-2 overflow-x-scroll no-scrollbar">
+      { project.data.tags && project.data.tags.map((d) => <Tag tag={d}/>) }
+    </div> -->
+    <div
+      class="prose px-2 pb-2 dark:prose-invert"
+      set:html={project.data.description}
+    />
+  </a>
+</div>

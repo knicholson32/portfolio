@@ -46,12 +46,26 @@ const project = defineCollection({
 			}),
 			alt: z.string(),
 			aspect: z.number().optional()
-		}),
+		}).optional(),
 		repo: z.union([
 			z.string(),
 			z.object({
 				user: z.string(),
 				repo: z.string()
+			})
+		]).optional(),
+		project: z.union([
+			z.string(),
+			z.object({
+				id: z.string(),
+				useAsProjectPage: z.boolean()
+			})
+		]).optional(),
+		chapter: z.union([
+			z.string(),
+			z.object({
+				id: z.string(),
+				order: z.number()
 			})
 		]).optional(),
 		tags: z.array(z.string()).optional(),

@@ -46,13 +46,13 @@
     if (anchor !== null && lastPassed !== passed) flatHeadings[heading.slug] = { setHighlight, offset: element?.offsetTop ?? -1, passed };
   });
 
-  const textFormatNormal = 'text-neutral-700 dark:text-neutral-400 font-normal dark:font-light';
+  const textFormatNormal = 'text-neutral-700 dark:text-neutral-300 font-normal dark:font-light';
   const textFormatH2 = 'text-neutral-950 dark:text-neutral-300 font-medium';
 
 </script>
 
 <li class="pt-1 my-0 py-0 px-0 overflow-hidden text-ellipsis">
-  <a bind:this={anchor} class="no-underline tracking-wider whitespace-nowrap {heading.depth === 2 ? textFormatH2 : textFormatNormal} sm:font-normal sm:dark:font-light sm:text-neutral-400 sm:dark:text-neutral-500 {highlight ? 'sm:!text-amber-500 sm:dark:!text-amber-500' : ''}" href={"#" + heading.slug}>
+  <a bind:this={anchor} class="no-underline tracking-wider whitespace-nowrap {heading.depth === 2 ? textFormatH2 : textFormatNormal} sm:font-normal sm:dark:font-light sm:text-neutral-400 sm:dark:text-neutral-300 sm:hover:text-neutral-950 sm:hover:dark:text-white {highlight ? 'sm:!text-amber-500 sm:dark:!text-amber-500' : ''}" href={"#" + heading.slug}>
     {heading.text}
   </a>
   {#if heading.subheadings.length > 0}

@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Chapter from "./Chapter.svelte";
+import { camelize } from "src/lib/helpers";
+
+type Props = {
+  relations: { data: CollectionEntry<"project">["data"]; slug: string }[];
+  chapterOrder: string[];
+  slug: string;
+};
+
+const { relations, chapterOrder, slug }: Props = Astro.props;
+
+const chapterList: {
+  title: string;
+  entries: {
+    title: string;
+    slug: string;
+    order?: number;
+  }[];
+}[] = [];
+
+const unChapteredList: {
+  title: string;
+  slug: string;
+  order?: number;
+}[] = [];
+
+const addToChapterList = (relation: (typeof relations)[0], chapterTitle?: string) => {
+  const idx = chapterTitle === undefined ? -1 : chapterList.findIndex((v) => v.title === camelize(chapterTitle));
+  const relationOrder = typeof relation.data.chapter === "object" ? relation.data.chapter.order : undefined;
+  const useAsProjectPage = relation.data.project !== undefined && typeof relation.data.project !== 'string' && relation.data.project.useAsProjectPage;
+  const entry = {
+    title: useAsProjectPage ? 'Overview' : camelize(relation.data.title),
+    slug: relation.slug,
+    order: relationOrder,
+  };
+  if (idx === -1) {
+    if (chapterTitle === undefined) unChapteredList.push(entry);
+    else chapterList.push({ title: camelize(chapterTitle), entries: [entry] });
+  } else chapterList[idx].entries.push(entry);
+};
+
+for (const relation of relations) {
+  if (relation.data.chapter === undefined) addToChapterList(relation);
+  else
+    addToChapterList(
+      relation,
+      typeof relation.data.chapter === "string"
+        ? relation.data.chapter
+        : relation.data.chapter.id,
+    );
+}
+
+for (const chapter of chapterList) chapter.entries.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+unChapteredList.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+if (chapterOrder.length > 0) chapterList.sort( (a, b) => chapterOrder.findIndex((v) => camelize(v) === a.title) - chapterOrder.findIndex((v) => camelize(v) === b.title));
+---
+
+<div class="w-full h-full overflow-y-scroll overflow-x-hidden md:pb-20">
+  {
+    chapterList.length > 0 ? (
+      <nav class="relative text-xs md:pb-2 md:p-4 md:pt-6 select-none">
+        {chapterList.map((chapter) => (
+          <Chapter chapter={chapter} slug={slug} client:idle />
+        ))}
+        {unChapteredList.length === 0 ? (
+          ""
+        ) : (
+          <Chapter chapter={{ entries: unChapteredList, title: "Other Posts" }} slug={slug} client:idle />
+        )}
+      </nav>
+    ) : (
+      <nav class="relative text-xs md:pb-2 md:p-4 md:pt-6 select-none">
+        {unChapteredList.length === 0 ? (
+          ""
+        ) : (
+          <Chapter chapter={{ entries: unChapteredList, title: "Project Posts" }} slug={slug} client:idle />
+        )}
+      </nav>
+    )
+  }
+</div>

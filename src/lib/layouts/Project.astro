@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import BaseHead from "@components/BaseHead.astro";
 import BaseHTML from "@layouts/BaseHTML.astro";
 import { Picture } from "astro:assets";
@@ -10,8 +10,12 @@ import ViewTransitionLimiter from "@components/svelte/ViewTransitionLimiter.svel
 import { SITE_TITLE } from "@consts";
 import type { MarkdownHeading } from "node_modules/astro/dist/@types/astro";
 import TableOfContents from "@components/svelte/decorations/TableOfContents.svelte";
-import Sidebar from "@components/Sidebar.astro";
+import SidebarRight from "@components/SidebarRight.astro";
+import SidebarLeft from "@components/SidebarLeft.astro";
 import CenterContent from '@components/CenterContent.astro';
+import ProjectRelationsSidebar from '@components/project/ProjectRelationsSidebar.astro'
+
+// import val from '@content/project/contour/order.ts';
 
 type Props = {
 	minutesRead: string | undefined;
@@ -27,8 +31,26 @@ const {
 	headings
 } = Astro.props;
 
-const aspectRatio =
-	data.image.aspect === undefined ? "aspect-ratio: 2" : `aspect-ratio: ${data.image.aspect};`;
+const aspectRatio = data.image === undefined ? undefined : data.image.aspect === undefined ? "aspect-ratio: 2" : `aspect-ratio: ${data.image.aspect};`;
+
+
+let projectRelated: { data: (CollectionEntry<'project'>)['data'], slug: string }[] = [];
+let order: string[] = [];
+
+const project = data.project === undefined ? undefined : typeof data.project === 'string' ? data.project : data.project.id;
+
+if (project !== undefined) {
+	projectRelated = (await getCollection("project")).filter((p) => (p.data.project === undefined ? undefined : typeof p.data.project === 'string' ? p.data.project : p.data.project.id) === project).flatMap((p) => { return{ data: p.data, slug: p.slug } } );
+	try {
+		const orderRaw = (await import(`../../../src/content/project/${project}/order.ts`)).default;
+		if (orderRaw.length > 0) order = orderRaw as string[];
+
+	} catch (e) {
+		// No order file. Nothing to do.
+	}
+}
+
+
 
 ---
 
@@ -43,13 +65,14 @@ const aspectRatio =
 </style> -->
 
 <BaseHTML>
-	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image.img.src} type="article" />
+	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image?.img.src} type="article" />
 	<CenterContent>
 		<ViewTransitionLimiter client:idle slug={slug}>
-			<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="object-cover z-10" loading={"eager"} alt="Cover image" 
-			/>
+			{data.image !== undefined && 
+				<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
+			}
 		</ViewTransitionLimiter>
-		<div class="">
+		<div class="mt-5">
 			<div class="title relative flex flex-row items-center">
 				<div>
 					<h1 id="overview" class="mb-2 text-xl xs:text-3xl sm:text-4xl scroll-m-96">{data.title}</h1>
@@ -76,12 +99,12 @@ const aspectRatio =
 				: ""}
 			</div>
 			<hr class="py-0 mt-2 mb-2 border-neutral-200 dark:border-neutral-800" />
-			<Sidebar side="right">
+			<SidebarLeft class="md:bg-neutral-50 md:dark:bg-neutral-950">
+				<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} slug={slug} />
+			</SidebarLeft>
+			<SidebarRight>
 				<TableOfContents headings={headings} client:idle />
-			</Sidebar>
-			<Sidebar side="left">
-				
-			</Sidebar>
+			</SidebarRight>
 			<slot />
 		</div>
 	<CenterContent/>
