@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "./FormattedDate.astro";
+
+type Props = {
+  project: CollectionEntry<"project">;
+};
+const { project } = Astro.props;
+
+project.data.image?.aspect
+---
+
+<div class="w-full my-0">
+  <a href={`/project/${project.slug}`} class="px-2 py-2 group hover:dark:bg-neutral-900 hover:bg-neutral-100 text-current no-underline text-sm flex flex-row items-center justify-center">
+    {project.data.image !== undefined && 
+      <img src={project.data.image?.img.src} class="rounded-none h-12 m-0 p-0" style={`aspect-ratio: ${project.data.image?.aspect ?? 2}`}/>
+    }
+    <div class="flex-grow"></div>
+    <div class="flex flex-col gap-1">
+      <div class="font-bold text-right">{project.data.title}</div>
+      <div class="text-xs opacity-50 text-right"><FormattedDate date={project.data.pubDate} /></div>
+    </div>
+  </a>
+</div>
