@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import BaseHead from "@components/BaseHead.astro";
 import BaseHTML from "@layouts/BaseHTML.astro";
+import HeaderMenu from "@components/svelte/HeaderMenu.svelte";
 import { Picture } from "astro:assets";
 import GitHub from "@components/decorations/Github.astro";
 import FormattedDate from "@components/FormattedDate.astro";
@@ -10,10 +11,8 @@ import ViewTransitionLimiter from "@components/svelte/ViewTransitionLimiter.svel
 import { SITE_TITLE } from "@consts";
 import type { MarkdownHeading } from "node_modules/astro/dist/@types/astro";
 import TableOfContents from "@components/svelte/decorations/TableOfContents.svelte";
-import SidebarRight from "@components/SidebarRight.astro";
-import SidebarLeft from "@components/SidebarLeft.astro";
-import CenterContent from '@components/CenterContent.astro';
 import ProjectRelationsSidebar from '@components/project/ProjectRelationsSidebar.astro'
+import ProjectHighlight from "@components/ProjectHighlight.astro";
 
 // import val from '@content/project/contour/order.ts';
 
@@ -36,6 +35,8 @@ const aspectRatio = data.image === undefined ? undefined : data.image.aspect ===
 
 let projectRelated: { data: (CollectionEntry<'project'>)['data'], slug: string }[] = [];
 let order: string[] = [];
+
+const allProjects = await getCollection("project");
 
 const project = data.project === undefined ? undefined : typeof data.project === 'string' ? data.project : data.project.id;
 
@@ -64,48 +65,73 @@ if (project !== undefined) {
 	} */
 </style> -->
 
-<BaseHTML>
+<BaseHTML includeFooter={false}>
+	{projectRelated.length === 0 ? '' : 
+		<HeaderMenu slot="header-menu" menuText="Project Relations" client:idle>
+			<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} slug={slug} />
+		</HeaderMenu>
+	}
 	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image?.img.src} type="article" />
-	<CenterContent>
-		<ViewTransitionLimiter client:idle slug={slug}>
-			{data.image !== undefined && 
-				<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
-			}
-		</ViewTransitionLimiter>
-		<div class="mt-5">
-			<div class="title relative flex flex-row items-center">
-				<div>
-					<h1 id="overview" class="mb-2 text-xl xs:text-3xl sm:text-4xl scroll-m-96">{data.title}</h1>
-					<div class="flex flex-row items-center gap-1 whitespace-nowrap">
-						<FormattedDate date={data.pubDate} />
-						<div class="hidden sm:inline-flex gap-1 items-center">{
-							data.pubDate && (
-								<span>•</span>
-								<div class="text-xs italic">
-									Updated <FormattedDate date={data.pubDate} />
-								</div>
-							)
-						}</div>
-						{minutesRead !== undefined ? <span>•</span><span class="text-xs italic">{minutesRead}</span> : ""}
-						<div class="flex-grow"></div>
+	<div class="flex flex-row gap-5 items-start w-full">
+		<aside class="hidden md:block relative flex-shrink-0 w-60 h-[100vh]">
+			<div class="fixed top-0 w-60 xl:w-[calc(100vw/2-26rem)] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] bg-neutral-50 dark:bg-neutral-950 overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800" style="">
+				{projectRelated.length === 0 ?
+					<div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-800">
+						<div class="w-full text-center py-2">Other Projects</div>
+						{ allProjects.filter((p) => p.slug !== slug && (p.data.chapter === undefined || (typeof p.data.project !== 'string' && p.data.project?.useAsProjectPage === true))).toSorted((a, b) => a.data.pubDate.getUTCMilliseconds() - b.data.pubDate.getUTCMilliseconds()).map((p) => 
+							<ProjectHighlight project={p}/>
+						)}
 					</div>
-					{data.tags && <div class="inline-flex gap-1 items-center overflow-x-scroll no-scrollbar">{ data.tags && data.tags.map((d) => <Tag tag={d}/>) }</div> }
-				</div>
-				<div class="flex-grow"></div>
-				{data.repo !== undefined ? 
-					<div class="">
-						<GitHub repo={data.repo} />
-					</div>
-				: ""}
+				: 
+					<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} slug={slug} />
+				}
 			</div>
-			<hr class="py-0 mt-2 mb-2 border-neutral-200 dark:border-neutral-800" />
-			<SidebarLeft class="md:bg-neutral-50 md:dark:bg-neutral-950">
-				<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} slug={slug} />
-			</SidebarLeft>
-			<SidebarRight>
-				<TableOfContents headings={headings} client:idle />
-			</SidebarRight>
-			<slot />
+		</aside>
+		<div class="relative flex-grow flex flex-col-reverse lg:flex-row gap-2 lg:gap-5 justify-center pl-5 md:pl-0 pr-5 lg:mr-60">
+			<div class="mt-5 flex-grow max-w-3xl w-full">
+				<ViewTransitionLimiter client:idle slug={slug}>
+					{data.image !== undefined ?
+						<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
+						: <div class="w-full h-12"></div>
+					}
+				</ViewTransitionLimiter>
+				<div class="title relative flex flex-row items-center">
+					<div>
+						<h1 id="overview" class="mb-2 text-xl xs:text-3xl sm:text-4xl scroll-m-96">{data.title}</h1>
+						<div class="flex flex-row items-center gap-1 whitespace-nowrap">
+							<FormattedDate date={data.pubDate} />
+							<div class="hidden sm:inline-flex gap-1 items-center">{
+								data.pubDate && (
+									<span>•</span>
+									<div class="text-xs italic">
+										Updated <FormattedDate date={data.pubDate} />
+									</div>
+								)
+							}</div>
+							{minutesRead !== undefined ? <span>•</span><span class="text-xs italic">{minutesRead}</span> : ""}
+							<div class="flex-grow"></div>
+						</div>
+						{data.tags && <div class="inline-flex gap-1 items-center overflow-x-scroll no-scrollbar">{ data.tags && data.tags.map((d) => <Tag tag={d}/>) }</div> }
+					</div>
+					<div class="flex-grow"></div>
+					{data.repo !== undefined ? 
+						<div class="">
+							<GitHub repo={data.repo} />
+						</div>
+					: ""}
+				</div>
+				<hr class="py-0 mt-2 mb-2 border-neutral-200 dark:border-neutral-800" />
+				
+				<slot />
+			</div>
+			<aside class="sticky left-0 right-0 top-[calc(4rem-3px)] bg-neutral-50 dark:bg-neutral-950 -mx-5 lg:mx-0 h-8 lg:h-auto lg:relative lg:overflow-hidden border-b lg:border-b-0 border-neutral-200 dark:border-neutral-800">
+				<div class="flex items-center justify-center w-full h-full lg:block lg:fixed lg:top-0 lg:h-[100vh] lg:w-60 xl:w-[calc(100vw/2-26rem)] overflow-y-auto overflow-x-hidden scrollbar-none lg:pt-[4.5rem] xl:pt-[5.5rem] lg:pl-5 lg:border-l border-neutral-200 dark:border-neutral-800" style="">
+					<TableOfContents headings={headings} client:idle />
+				</div>
+			</aside>
 		</div>
-	<CenterContent/>
+		<!-- <SidebarRight>
+			<TableOfContents headings={headings} client:idle />
+		</SidebarRight> -->
+	</div>
 </BaseHTML>

@@ -7,12 +7,14 @@ interface Props {
   class?: string;
   useViewTransitions?: boolean;
   pageType?: "devlog";
+  includeFooter?: boolean;
 }
 
 const {
   class: className,
   useViewTransitions = true,
   pageType = "devlog",
+  includeFooter = true,
 } = Astro.props;
 ---
 
@@ -23,13 +25,22 @@ const {
     {useViewTransitions ? <ViewTransitions /> : ""}
   </head>
 
-  <body class="bg-neutral-50 dark:bg-neutral-900 " style="overscroll-behavior: none;">
-    <Header title={pageType} />
-    <main id="main" class="absolute top-16 xl:top-20 bottom-0 left-0 right-0 overflow-y-auto pt-6" style="">
-      <div class="h-fit w-full flex flex-col items-center prose dark:prose-invert prose-amber prose-img:rounded-xl prose-h2:scroll-m-6 prose-h3:scroll-m-6 prose-h4:scroll-m-4 prose-h5:scroll-m-1 prose-h6:scroll-m-1 p-4 max-w-full">
+  <body class="bg-neutral-50 dark:bg-neutral-900" style="overscroll-behavior: none;">
+    <Header title={pageType}>
+      <slot name="header-menu" />
+    </Header>
+    <!-- <main id="main" class="absolute top-16 xl:top-20 bottom-0 left-0 right-0 overflow-y-auto pt-6" style=""> -->
+    <main class="" style="">
+      <div
+        id="main"
+        class="h-fit w-full flex flex-col items-center prose dark:prose-invert prose-amber prose-img:rounded-xl max-w-full
+        prose-h2:scroll-m-28 prose-h3:scroll-m-28 prose-h4:scroll-m-28 prose-h5:scroll-m-24 prose-h6:scroll-m-24
+        lg:prose-h2:scroll-m-20 lg:prose-h3:scroll-m-20 lg:prose-h4:scroll-m-20 lg:prose-h5:scroll-m-16 lg:prose-h6:scroll-m-16
+        xl:prose-h2:scroll-m-24 xl:prose-h3:scroll-m-24 xl:prose-h4:scroll-m-24 xl:prose-h5:scroll-m-20 xl:prose-h6:scroll-m-20"
+      >
         <slot />
       </div>
-      <Footer />
+      {includeFooter ? <Footer /> : ""}
     </main>
   </body>
 </html>

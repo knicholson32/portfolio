@@ -28,7 +28,7 @@ const aspectRatio =
 <BaseHTML>
 	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image.img.src} type="article"
 	/>
-	<article class="w-full max-w-2xl">
+	<article class="w-full max-w-2xl p-4">
 		<ViewTransitionLimiter client:idle slug={slug}>
 			<Picture formats={["avif", "webp"]} width={1024} src={data.image.img} style={aspectRatio} class="object-cover z-10" loading={"eager"} alt="Cover image" 
 			/>
