@@ -64,6 +64,14 @@ if (project !== undefined) {
 		background-color: #ff0000;
 	} */
 </style> -->
+					<!-- {projectRelated.length === 0 ?
+						<div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-800">
+							<div class="w-full text-center py-2">Other Projects</div>
+							{ allProjects.filter((p) => p.slug !== slug && (p.data.chapter === undefined || (typeof p.data.project !== 'string' && p.data.project?.useAsProjectPage === true))).toSorted((a, b) => a.data.pubDate.getUTCMilliseconds() - b.data.pubDate.getUTCMilliseconds()).map((p) => 
+								<ProjectHighlight project={p}/>
+							)}
+						</div>
+					:  -->
 
 <BaseHTML includeFooter={false}>
 	{projectRelated.length === 0 ? '' : 
@@ -73,22 +81,18 @@ if (project !== undefined) {
 	}
 	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image?.img.src} type="article" />
 	<div class="flex flex-row gap-5 items-start w-full">
-		<aside class="hidden md:block relative flex-shrink-0 w-60 h-[100vh]">
-			<div class="fixed top-0 w-60 xl:w-[calc(100vw/2-26rem)] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] bg-neutral-50 dark:bg-neutral-950 overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800" style="">
-				{projectRelated.length === 0 ?
-					<div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-800">
-						<div class="w-full text-center py-2">Other Projects</div>
-						{ allProjects.filter((p) => p.slug !== slug && (p.data.chapter === undefined || (typeof p.data.project !== 'string' && p.data.project?.useAsProjectPage === true))).toSorted((a, b) => a.data.pubDate.getUTCMilliseconds() - b.data.pubDate.getUTCMilliseconds()).map((p) => 
-							<ProjectHighlight project={p}/>
-						)}
-					</div>
-				: 
+		<aside class={`hidden md:block relative flex-shrink-0 h-[100vh] ${projectRelated.length === 0 ? 'w-0 xl:w-60' : 'w-60'}`}>
+			{ projectRelated.length !== 0 ? 
+				<div class="fixed top-0 w-60 xl:w-[calc(100vw/2-26rem)] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] bg-neutral-50 dark:bg-neutral-950 overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800" style="">
 					<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} slug={slug} />
-				}
-			</div>
+				</div>
+				:
+				<div class="fixed top-0 w-60 xl:w-[calc(100vw/2-26rem)] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)]" style=""></div>
+			}
 		</aside>
+
 		<div class="w-[calc(100vw-6rem)] relative flex-grow flex flex-col-reverse lg:flex-row gap-2 lg:gap-5 justify-center pl-5 md:pl-0 pr-5 lg:mr-60">
-			<div class="mt-5 flex-grow max-w-3xl w-full">
+			<div class="mt-5 flex-grow xl:max-w-3xl w-full">
 				<ViewTransitionLimiter client:idle slug={slug}>
 					{data.image !== undefined ?
 						<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
