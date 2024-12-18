@@ -1,17 +1,15 @@
 ---
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
-  class?: string;
   useViewTransitions?: boolean;
   pageType?: "devlog";
   includeFooter?: boolean;
 }
 
 const {
-  class: className,
   useViewTransitions = true,
   pageType = "devlog",
   includeFooter = true,
@@ -22,10 +20,13 @@ const {
 <html lang="en" class="bg-neutral-100 dark:bg-neutral-925" style="">
   <head>
     <slot name="header" />
-    {useViewTransitions ? <ViewTransitions /> : ""}
+    {useViewTransitions ? <ClientRouter /> : ""}
   </head>
 
-  <body class="bg-neutral-50 dark:bg-neutral-900" style="overscroll-behavior: none;">
+  <body
+    class="bg-neutral-50 dark:bg-neutral-900"
+    style="overscroll-behavior: none;"
+  >
     <Header title={pageType}>
       <slot name="header-menu" />
     </Header>

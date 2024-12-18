@@ -8,18 +8,18 @@
       title: string,
       entries: {
         title: string,
-        slug: string,
+        id: string,
         order?: number
       }[]
     },
-    slug: string
+    id: string
   }
 
-  const { chapter, slug }: Props = $props();
+  const { chapter, id }: Props = $props();
 
   let chapterContainsCurrent = false;
   for (const c of chapter.entries) {
-      if (c.slug === slug) {
+      if (c.id === id) {
       chapterContainsCurrent = true;
       break;
     }
@@ -41,16 +41,16 @@
 </button>
 {#if navOpen}
   <ul class="list-none my-0 ml-2 mr-1 px-1 border-l border-neutral-200 dark:border-neutral-800">
-    {#each chapter.entries as entry (entry.slug)}
-      {#if slug === entry.slug}
+    {#each chapter.entries as entry (entry.id)}
+      {#if id === entry.id}
         <li class="py-1 ml-0 px-2 overflow-hidden text-ellipsis bg-amber-500 rounded-md">
-          <a class="no-underline" href="/project/{entry.slug}">
+          <a class="no-underline" href="/project/{entry.id}">
             <div class="w-full no-underline tracking-wider whitespace-nowrap text-ellipsis overflow-hidden font-medium text-neutral-950">{entry.title}</div>
           </a>
         </li>
       {:else}
         <li class="py-1 ml-1 overflow-hidden text-ellipsis">
-          <a class="no-underline" href="/project/{entry.slug}">
+          <a class="no-underline" href="/project/{entry.id}">
             <div class="no-underline tracking-wider whitespace-nowrap text-ellipsis overflow-hidden font-normal dark:font-light text-neutral-400 dark:text-neutral-300 hover:text-neutral-950 hover:dark:text-white">{entry.title}</div>
           </a>    
         </li>

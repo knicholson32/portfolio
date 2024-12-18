@@ -7,7 +7,6 @@ import svelte from '@astrojs/svelte';
 import { loadEnv } from "vite";
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
 
-// import cloudflare from '@astrojs/cloudflare';
 
 const { PUBLIC_URL } = loadEnv(process.env.NODE_ENV ?? '', process.cwd(), "");
 

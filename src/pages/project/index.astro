@@ -1,7 +1,7 @@
 ---
 import BaseHead from "@components/BaseHead.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@consts";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseHTML from "@layouts/BaseHTML.astro";
 import ProjectGrid from "@components/project/ProjectGrid.astro";
 import Tag from "@components/Tag.astro";
@@ -20,7 +20,7 @@ projects = projects.filter((p) => {
 
 const projectsWithRenderProps = await Promise.all(
 	projects.map(async (project) => {
-		const { remarkPluginFrontmatter } = await project.render();
+		const { remarkPluginFrontmatter } = await render(project);
 		return {
 			post: project,
 			minutesRead: remarkPluginFrontmatter.minutesRead as string | undefined,

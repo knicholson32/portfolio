@@ -6,6 +6,14 @@ export default {
 			screens: {
 				'xs': '475px',
 			},
+			fontSize: {
+				xxs: [
+					'0.6rem',
+					{
+						lineHeight: '1rem'
+					}
+				]
+			},
 			keyframes: {
 				wiggle: {
 					'0%, 100%': { transform: 'rotate(-10deg)' },
