@@ -25,7 +25,7 @@ Deployments are automatically executed when pushing and during pull requests. Un
 
 All source code is in `src`, with `lib` and `pages` being the primary development folders.
 
-```shell
+```shellscript
 Directory       Client/Server   Description
 ───────────────────────────────────────────
 src
