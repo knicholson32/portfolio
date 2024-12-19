@@ -1,5 +1,6 @@
 ---
 title: Docker Node Template
+project: docker-node-template
 description: A template repository for creating docker containers that run NodeJS services.
 pubDate: Nov 5 2024
 image:
@@ -57,14 +58,14 @@ During development, a dev container is created and ran, with a mount `node_modul
 
 Besides the usual NodeJS and `Typescript` developmental steps, the dev environment must be built:
 
-```Shell
+```shellscript
 # Start dev environment and hot-reload with ESBuild
 make dev
 ```
 
 To create a local export of the container that will be uploaded to the container registries, run the following command:
 
-```Shell
+```shellscript
 # Build the full image and host it locally
 make create-local && make local
 ```

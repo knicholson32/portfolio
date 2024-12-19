@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import BaseHead from "@components/BaseHead.astro";
 import BaseHTML from "@layouts/BaseHTML.astro";
 import { Picture } from "astro:assets";
@@ -7,29 +7,36 @@ import FormattedDate from "@components/FormattedDate.astro";
 import Tag from "@components/Tag.astro";
 import ViewTransitionLimiter from "@components/svelte/ViewTransitionLimiter.svelte";
 import { SITE_TITLE } from "@consts";
+import { ChevronLeft, ChevronRight } from "lucide-astro";
 
 type Props = {
 	minutesRead: string | undefined;
-	slug: string,
+	id: string,
 	data: CollectionEntry<"post">["data"];
 };
 
 const {
 	minutesRead,
-	slug,
+	id,
 	data,
 } = Astro.props;
 
 const aspectRatio =
 	data.image.aspect === undefined ? "" : `aspect-ratio: ${data.image.aspect};`;
 
+const allPosts = (await getCollection("post")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const currentPostIndex = allPosts.findIndex((p) => p.id === id);
+
 ---
 
-<BaseHTML>
+<BaseHTML includeFooter={false}>
 	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image.img.src} type="article"
 	/>
-	<article class="w-full max-w-2xl p-4">
-		<ViewTransitionLimiter client:idle slug={slug}>
+	<article class="w-full max-w-2xl p-4 relative">
+		<ViewTransitionLimiter client:idle id={id}>
 			<Picture formats={["avif", "webp"]} width={1024} src={data.image.img} style={aspectRatio} class="object-cover z-10" loading={"eager"} alt="Cover image" 
 			/>
 		</ViewTransitionLimiter>
@@ -55,4 +62,20 @@ const aspectRatio =
 			<slot />
 		</div>
 	</article>
+	<div class="relative w-full px-3 pb-3 lg:px-0 lg:pb-0 lg:w-auto lg:fixed lg:bottom-3 lg:left-3 lg:right-3 flex flex-row justify-between">
+		{currentPostIndex !== 0 ?
+			<a href={`/post/${allPosts[currentPostIndex - 1].id}`} class="inline-flex items-center gap-2 bg-neutral-800 rounded-lg pl-2 pr-4 py-2 no-underline text-current select-none group">
+				<ChevronLeft class="w-4 h-4 group-hover:text-amber-500"/>
+				Previous <span class="hidden sm:block lg:hidden xl:block">Post</span>
+			</a>
+			:
+			<div></div>
+		}
+		{currentPostIndex < allPosts.length - 1 && 
+			<a href={`/post/${allPosts[currentPostIndex + 1].id}`} class="inline-flex items-center gap-2 mx-3 bg-neutral-800 rounded-lg pr-2 pl-4 py-2 no-underline text-current select-none group">
+				Next <span class="hidden sm:block lg:hidden xl:block">Post</span>
+				<ChevronRight class="w-4 h-4 group-hover:text-amber-500"/>
+			</a>
+		}
+	</div>
 </BaseHTML>

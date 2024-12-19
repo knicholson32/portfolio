@@ -1,11 +1,8 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseHead from "@components/BaseHead.astro";
-import FormattedDate from "@components/FormattedDate.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@consts";
 import BaseHTML from "@layouts/BaseHTML.astro";
-import { Image } from "astro:assets";
-import PostPreview from "@components/PostPreview.astro";
 import PostGrid from "@components/PostGrid.astro";
 
 export async function getStaticPaths() {
@@ -18,12 +15,10 @@ export async function getStaticPaths() {
       for (const t of post.data.tags)
         if (!paths.includes(t.toLowerCase())) paths.push(t.toLowerCase());
 
-  return paths.map((p) => ({ params: { slug: p } }));
+  return paths.map((p) => ({ params: { id: p } }));
 }
 
-type Props = CollectionEntry<"post">;
-
-const slug = Astro.params.slug;
+const id = Astro.params.id;
 
 const postsUnfiltered = await getCollection("post");
 
@@ -31,14 +26,14 @@ const posts = postsUnfiltered.filter((p) => {
   return (
     p.data.tags !== undefined &&
     p.data.tags.findIndex((t: string) => {
-      return t.toLowerCase() === slug.toLowerCase();
+      return t.toLowerCase() === id.toLowerCase();
     }) !== -1
   );
 });
 
 const postsWithRenderProps = await Promise.all(
   posts.map(async (post) => {
-    const { remarkPluginFrontmatter } = await post.render();
+    const { remarkPluginFrontmatter } = await render(post);
     return {
       post: post,
       minutesRead: remarkPluginFrontmatter.minutesRead as string | undefined,
@@ -48,13 +43,19 @@ const postsWithRenderProps = await Promise.all(
 ---
 
 <BaseHTML>
-  <BaseHead slot="header" title={slug + ' | ' + SITE_TITLE} description={SITE_DESCRIPTION} />
-  <div class="w-full font-mono">
+  <BaseHead
+    slot="header"
+    title={id + " | " + SITE_TITLE}
+    description={SITE_DESCRIPTION}
+  />
+  <div class="w-full font-mono px-4 pt-4">
     &gt; showing Posts with a tag of <code class="opacity-80 text-amber-500"
-      >{slug}</code
+      >{id}</code
     >:
   </div>
-  <hr class="py-0 mt-4 mb-2 w-full border-neutral-200 dark:border-neutral-800" />
+  <hr
+    class="py-0 mt-4 mb-2 w-full border-neutral-200 dark:border-neutral-800"
+  />
   <PostGrid posts={postsWithRenderProps} />
 </BaseHTML>
 

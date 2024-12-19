@@ -53,13 +53,19 @@
     if (anchor !== null && lastPassed !== passed) flatHeadings[heading.slug] = { setHighlight, offset: element?.offsetTop ?? -1, passed, title: heading.text, slug: heading.slug };
   });
 
+  const scrollTo = (event: Event) => {
+    event.preventDefault();
+    if (heading.slug === 'overview') document.scrollingElement?.scrollTo({ top: 0, behavior: 'smooth' });
+    else document.scrollingElement?.scrollTo({ top: element?.offsetTop - scrollOffset, behavior: 'smooth' });
+  }
+
   // const textFormatNormal = 'text-neutral-700 dark:text-neutral-300 font-normal dark:font-light';
   // const textFormatH2 = 'text-neutral-950 dark:text-neutral-300 font-medium';
 
 </script>
 
 <li class="pt-1.5 my-0 py-0 px-0 overflow-hidden text-ellipsis">
-  <a bind:this={anchor} class="no-underline tracking-wider whitespace-nowrap font-normal dark:font-light text-neutral-800 dark:text-neutral-300 sm:hover:text-neutral-950 sm:hover:dark:text-white {highlight ? '!text-amber-500 dark:!text-amber-500' : ''}" href={"#" + heading.slug}>
+  <a bind:this={anchor} onclick={scrollTo} class="no-underline tracking-wider whitespace-nowrap font-normal dark:font-light text-neutral-800 dark:text-neutral-300 sm:hover:text-neutral-950 sm:hover:dark:text-white transition-colors duration-75 {highlight ? '!text-amber-500 dark:!text-amber-500' : ''}" href={"#" + heading.slug}>
     {heading.text}
   </a>
   {#if heading.subheadings.length > 0}

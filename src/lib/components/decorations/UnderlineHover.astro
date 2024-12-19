@@ -1,0 +1,14 @@
+---
+
+  type Props = {
+    class?: string
+    groupHover?: boolean
+  }
+
+  const { class: className = '', groupHover = true } = Astro.props;
+
+---
+
+<span class=`${className} transition-[background-size] bg-left-bottom bg-gradient-to-r from-amber-500 to-pink-500 bg-[length:0%_2px] bg-no-repeat hover:bg-[length:100%_2px] ${groupHover ? 'group-hover:bg-[length:100%_2px]' : ''} duration-250 ease-out`>
+  <slot/>
+</span>

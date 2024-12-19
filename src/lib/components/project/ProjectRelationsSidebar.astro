@@ -4,25 +4,25 @@ import Chapter from "./Chapter.svelte";
 import { camelize } from "src/lib/helpers";
 
 type Props = {
-  relations: { data: CollectionEntry<"project">["data"]; slug: string }[];
+  relations: { data: CollectionEntry<"project">["data"]; id: string }[];
   chapterOrder: string[];
-  slug: string;
+  id: string;
 };
 
-const { relations, chapterOrder, slug }: Props = Astro.props;
+const { relations, chapterOrder, id }: Props = Astro.props;
 
 const chapterList: {
   title: string;
   entries: {
     title: string;
-    slug: string;
+    id: string;
     order?: number;
   }[];
 }[] = [];
 
 const unChapteredList: {
   title: string;
-  slug: string;
+  id: string;
   order?: number;
 }[] = [];
 
@@ -44,7 +44,7 @@ const addToChapterList = (
     relation.data.project.useAsProjectPage;
   const entry = {
     title: useAsProjectPage ? "Overview" : camelize(relation.data.title),
-    slug: relation.slug,
+    id: relation.id,
     order: relationOrder,
   };
   if (idx === -1) {
@@ -80,14 +80,14 @@ if (chapterOrder.length > 0)
     chapterList.length > 0 ? (
       <nav class="relative text-xs px-5 py-3 select-none">
         {chapterList.map((chapter) => (
-          <Chapter chapter={chapter} slug={slug} client:idle />
+          <Chapter chapter={chapter} id={id} client:idle />
         ))}
         {unChapteredList.length === 0 ? (
           ""
         ) : (
           <Chapter
             chapter={{ entries: unChapteredList, title: "Other Posts" }}
-            slug={slug}
+            id={id}
             client:idle
           />
         )}
@@ -99,7 +99,7 @@ if (chapterOrder.length > 0)
         ) : (
           <Chapter
             chapter={{ entries: unChapteredList, title: "Project Posts" }}
-            slug={slug}
+            id={id}
             client:idle
           />
         )}

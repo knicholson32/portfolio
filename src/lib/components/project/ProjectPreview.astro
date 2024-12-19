@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import FormattedDate from "@components/FormattedDate.astro";
-import Picture from "astro/components/Picture.astro";
+import { Picture } from "astro:assets";
 
 type Props = {
   minutesRead: string | undefined;
@@ -13,7 +13,7 @@ const { minutesRead, project } = Astro.props;
 
 <div class="prose-a:no-underline prose-a:font-normal rounded-xl">
   <a
-    href={`/project/${project.slug}/`}
+    href={`/project/${project.id}/`}
     class="flex flex-col gap-0 justify-center"
   >
     {
@@ -26,7 +26,7 @@ const { minutesRead, project } = Astro.props;
           class="object-cover rounded-lg m-0 mb-2"
           loading={"lazy"}
           alt="Cover image"
-          transition:name={`img-${project.slug.replaceAll("/", "-")}`}
+          transition:name={`img-${project.id.replaceAll("/", "-")}`}
         />
       )
     }

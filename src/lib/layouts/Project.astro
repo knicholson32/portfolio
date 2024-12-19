@@ -8,24 +8,24 @@ import GitHub from "@components/decorations/Github.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import Tag from "@components/Tag.astro";
 import ViewTransitionLimiter from "@components/svelte/ViewTransitionLimiter.svelte";
-import { SITE_TITLE } from "@consts";
-import type { MarkdownHeading } from "node_modules/astro/dist/@types/astro";
+import { authors, SITE_TITLE } from "@consts";
 import TableOfContents from "@components/svelte/decorations/TableOfContents.svelte";
 import ProjectRelationsSidebar from '@components/project/ProjectRelationsSidebar.astro'
-import ProjectHighlight from "@components/ProjectHighlight.astro";
+import type { MarkdownHeading } from "node_modules/astro/dist/types/public";
+import UnderlineHover from "@components/decorations/UnderlineHover.astro";
 
 // import val from '@content/project/contour/order.ts';
 
 type Props = {
 	minutesRead: string | undefined;
-	slug: string;
+	id: string;
 	data: CollectionEntry<"project">["data"];
 	headings: MarkdownHeading[];
 };
 
 const {
 	minutesRead,
-	slug,
+	id,
 	data,
 	headings
 } = Astro.props;
@@ -33,63 +33,98 @@ const {
 const aspectRatio = data.image === undefined ? undefined : data.image.aspect === undefined ? "aspect-ratio: 2" : `aspect-ratio: ${data.image.aspect};`;
 
 
-let projectRelated: { data: (CollectionEntry<'project'>)['data'], slug: string }[] = [];
+let primaryProjectPost: CollectionEntry<'project'>['data'] | null = null;
+let projectRelated: { data: (CollectionEntry<'project'>)['data'], id: string }[] = [];
+let postRelated: { data: (CollectionEntry<'post'>)['data'], id: string }[] = [];
+let projectRelatedShallow: { data: (CollectionEntry<'project'>)['data'], id: string }[] = [];
+const allProjects = await getCollection<'project'>('project');
 let order: string[] = [];
-
-const allProjects = await getCollection("project");
 
 const project = data.project === undefined ? undefined : typeof data.project === 'string' ? data.project : data.project.id;
 
 if (project !== undefined) {
-	projectRelated = (await getCollection("project")).filter((p) => (p.data.project === undefined ? undefined : typeof p.data.project === 'string' ? p.data.project : p.data.project.id) === project).flatMap((p) => { return{ data: p.data, slug: p.slug } } );
+	projectRelated = (await getCollection("project")).filter((p) => (p.data.project === undefined ? undefined : typeof p.data.project === 'string' ? p.data.project : p.data.project.id) === project).flatMap((p) => { return{ data: p.data, id: p.id } } );
 	try {
 		const orderRaw = (await import(`../../../src/content/project/${project}/order.ts`)).default;
 		if (orderRaw.length > 0) order = orderRaw as string[];
-
 	} catch (e) {
 		// No order file. Nothing to do.
 	}
+	postRelated = (await getCollection<'post'>('post')).filter((p) => (p.data.related !== undefined && p.data.related.findIndex((v: string) => v.toLowerCase() === project) !== -1));
+	projectRelatedShallow = allProjects.filter((p) => (p.data.related !== undefined && p.data.related.findIndex((v: string) => v.toLowerCase() === project) !== -1));
+
+	primaryProjectPost = allProjects.find((p) => typeof p.data.project !== 'string' && p.data.project !== undefined && p.data.project.useAsProjectPage === true)?.data ?? null;
 }
 
+postRelated.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+projectRelatedShallow.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// { project.data.project !== undefined ?
+// 											<span class="text-xxs" set:html={allProjects.find((p) => p.data.project === project.data.project && typeof p.data.project !== 'string' && p.data.project !== undefined && p.data.project.useAsProjectPage === true)?.data.description ?? project.data.description}></span>	
+// 										:
 
 
 ---
 
-<!-- <style is:global>
-	.highlight:last-of-type {
-		background-color: #ff0000;
-	}
-
-	/* .highlight:not(:has(~ .highlight)) {
-		background-color: #ff0000;
-	} */
-</style> -->
 
 <BaseHTML includeFooter={false}>
 	{projectRelated.length === 0 ? '' : 
 		<HeaderMenu slot="header-menu" menuText="Project Relations" client:idle>
-			<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} slug={slug} />
+			<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} id={id} />
 		</HeaderMenu>
 	}
 	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image?.img.src} type="article" />
 	<div class="flex flex-row gap-5 items-start w-full">
-		<aside class="hidden md:block relative flex-shrink-0 w-60 h-[100vh]">
-			<div class="fixed top-0 w-60 xl:w-[calc(100vw/2-26rem)] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] bg-neutral-50 dark:bg-neutral-950 overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800" style="">
-				{projectRelated.length === 0 ?
-					<div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-800">
-						<div class="w-full text-center py-2">Other Projects</div>
-						{ allProjects.filter((p) => p.slug !== slug && (p.data.chapter === undefined || (typeof p.data.project !== 'string' && p.data.project?.useAsProjectPage === true))).toSorted((a, b) => a.data.pubDate.getUTCMilliseconds() - b.data.pubDate.getUTCMilliseconds()).map((p) => 
-							<ProjectHighlight project={p}/>
-						)}
+
+		<!-- Left Sidebar -->
+		<aside class={`hidden md:block relative flex-shrink-0 h-[100vh] ${projectRelated.length === 0 ? 'w-0 xl:w-60' : 'w-60'}`}>
+			{ projectRelated.length !== 0 || postRelated.length !== 0 || projectRelatedShallow.length !== 0 ? 
+				<div class="fixed top-0 w-60 xl:w-[calc(max(100vw/2-26rem-8rem,15rem))] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] bg-neutral-50 dark:bg-neutral-950 overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800 flex flex-col gap-4 py-4" style="">
+					<div class="mx-4 px-5 py-4 flex flex-col gap-2 justify-center border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
+						<div class="text-justify font-serif font-bold capitalize text-xl whitespace-nowrap">{project}</div>
+						<div class="text-justify text-xs text-neutral-600 dark:text-neutral-400">{primaryProjectPost?.description ?? data.description}</div>
 					</div>
-				: 
-					<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} slug={slug} />
-				}
-			</div>
+					<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} id={id} />
+					{ postRelated.length > 0 ?
+						<div class="mx-4 px-5 py-4 flex flex-col gap-2 justify-center border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
+							<div class="text-lg font-medium inline-flex items-center justify-between">Related Posts <span class="text-xs text-neutral-500 dark:text-neutral-500">({postRelated.length})</span></div>
+							<div class="max-h-56 overflow-y-scroll flex flex-col gap-3">
+								{ postRelated.map((post) => 
+									<a href={`/post/${post.id}`} target="_blank" class="group text-xs text-current no-underline"><UnderlineHover class="text-sm font-medium text-amber-500">{post.data.title}</UnderlineHover> - <span><FormattedDate class="" date={post.data.pubDate} /></span><br/><span class="text-xxs" set:html={post.data.description}></span></a>
+								)}
+							</div>
+						</div>
+						: ""
+					}
+					{ projectRelatedShallow.length > 0 ?
+						<div class="mx-4 px-5 py-4 flex flex-col gap-2 justify-center border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
+							<div class="text-lg font-medium inline-flex items-center justify-between">Related Projects <span class="text-xs text-neutral-500 dark:text-neutral-500">({projectRelatedShallow.length})</span></div>
+							<div class="max-h-56 overflow-y-scroll flex flex-col gap-3">
+								{ projectRelatedShallow.map((project) => 
+									<a href={`/project/${project.id}`} target="_blank" class="group text-xs text-current no-underline">
+										<UnderlineHover class="text-sm font-medium text-amber-500 capitalize">{project.data.project !== undefined ? `${(typeof project.data.project === 'string' ? project.data.project : project.data.project.id)} → ` : ''}{project.data.title}</UnderlineHover>
+										- <span><FormattedDate class="" date={project.data.pubDate} /></span>
+										<br/>
+										
+											<span class="text-xxs" set:html={project.data.description}></span>
+									</a>
+								)}
+							</div>
+						</div>
+						: ""
+					}
+				</div>
+				:
+				<div class="fixed top-0 w-60 xl:w-[calc(100vw/2-26rem)] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)]" style=""></div>
+			}
 		</aside>
+
+		<!-- Right Content -->
 		<div class="w-[calc(100vw-6rem)] relative flex-grow flex flex-col-reverse lg:flex-row gap-2 lg:gap-5 justify-center pl-5 md:pl-0 pr-5 lg:mr-60">
-			<div class="mt-5 flex-grow max-w-3xl w-full">
-				<ViewTransitionLimiter client:idle slug={slug}>
+			
+			<!-- Main Content -->
+			<div class="mt-5 flex-grow xl:max-w-5xl w-full">
+				<ViewTransitionLimiter client:idle id={id}>
 					{data.image !== undefined ?
 						<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
 						: <div class="w-full h-12"></div>
@@ -112,6 +147,9 @@ if (project !== undefined) {
 							<div class="flex-grow"></div>
 						</div>
 						{data.tags && <div class="inline-flex gap-1 items-center overflow-x-scroll no-scrollbar">{ data.tags && data.tags.map((d) => <Tag tag={d}/>) }</div> }
+						{ data.author !== undefined && data.author !== 'keenan' &&
+							<a href={`${authors[data.author].home}/project/${id}`} target="_blank" class="italic text-xxs w-full inline-flex items-center gap-2">This post was written by {authors[data.author].name}. <img class="w-5 h-5 rounded-full m-0 p-0" src={`https://www.gravatar.com/avatar/${authors[data.author].gravatarID}?s=150&d=identicon`} alt={`Profile picture for ${authors[data.author].name}`}/></a>
+						}
 					</div>
 					<div class="flex-grow"></div>
 					{data.repo !== undefined ? 
@@ -124,14 +162,13 @@ if (project !== undefined) {
 				
 				<slot />
 			</div>
+
+			<!-- Right Sidebar -->
 			<aside class="sticky left-0 right-0 top-[calc(4rem-3px)] bg-neutral-50 dark:bg-neutral-950 -mx-5 lg:mx-0 h-8 lg:h-auto lg:relative lg:overflow-hidden border-b lg:border-b-0 border-neutral-200 dark:border-neutral-800">
 				<div class="flex items-center justify-center w-full h-full lg:block lg:fixed lg:top-0 lg:h-[100vh] lg:w-60 xl:w-[calc(100vw/2-26rem)] overflow-y-auto overflow-x-hidden scrollbar-none lg:pt-[4.5rem] xl:pt-[5.5rem] lg:pl-5 lg:border-l border-neutral-200 dark:border-neutral-800" style="">
 					<TableOfContents headings={headings} client:idle />
 				</div>
 			</aside>
 		</div>
-		<!-- <SidebarRight>
-			<TableOfContents headings={headings} client:idle />
-		</SidebarRight> -->
 	</div>
 </BaseHTML>
