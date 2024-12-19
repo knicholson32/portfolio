@@ -3,7 +3,7 @@ import { type CollectionEntry, getCollection, render } from "astro:content";
 import Project from "@layouts/Project.astro";
 
 export async function getStaticPaths() {
-	const projects = await getCollection("project");
+	const projects = await getCollection('project');
 	return projects.map((project) => {
 		return {
 			params: { id: project.id },
@@ -11,8 +11,8 @@ export async function getStaticPaths() {
 		};
 	});
 }
-type Props = CollectionEntry<"post">;
 
+type Props = CollectionEntry<'project'>;
 const post = Astro.props;
 const { Content, remarkPluginFrontmatter, headings } = await render(post);
 

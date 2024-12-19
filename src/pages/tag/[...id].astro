@@ -23,7 +23,6 @@ const id = Astro.params.id;
 const postsUnfiltered = await getCollection("post");
 
 const posts = postsUnfiltered.filter((p) => {
-  console.log(p.data.tags);
   return (
     p.data.tags !== undefined &&
     p.data.tags.findIndex((t: string) => {
