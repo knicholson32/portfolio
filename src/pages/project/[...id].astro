@@ -4,6 +4,29 @@ import Project from "@layouts/Project.astro";
 
 export async function getStaticPaths() {
 	const projects = await getCollection('project');
+
+	// Check that all projects have a project page, or only contain one post
+	for (const project of projects) {
+
+		// Calculate the project ID, post ID and whether or not this is the project page
+		const pid = project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? project.data.project : project.data.project.id;
+		const id = project.id;
+		const projectPage = project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? false : project.data.project.useAsProjectPage;
+
+		// If it isn't the project page, check some criteria
+		if (!projectPage) {
+			// Get the other posts in this project
+			const associatedProjects = projects.filter((project) => project.id !== id && pid === project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? project.data.project : project.data.project.id);
+			if (associatedProjects.length > 0) {
+				// There are other posts about this project, and this project isn't the main one. Make sure there is a project page.
+				const projectPages = associatedProjects.filter((project) => (project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? false : project.data.project.useAsProjectPage) === true);
+				if (projectPages.length === 0) throw new Error(`Projects must have a project page, or only 1 post. The project '${pid}' is invalid.`);
+				else if (projectPages.length > 1) throw new Error(`A project can only have 1 project page. The project '${pid}' has ${projectPages.length}.`);
+				
+			}
+		}
+	}
+
 	return projects.map((project) => {
 		return {
 			params: { id: project.id },
