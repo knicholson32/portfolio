@@ -92,8 +92,8 @@ const href = `https://github.com/${typeof repo === "string" ? BASE_GITHUB_USER :
     <div class="flex flex-row w-full items-center justify-start gap-2">
       <div class="hidden lg:flex flex-row items-center gap-2 border-r border-neutral-200 dark:border-neutral-800 pr-2">
         {langSrc.map((v) => 
-          <img class="w-5 !rounded-none hidden dark:inline-flex" title={v.lang} src={v.dark} src={`${v.lang} Logo`} />
-          <img class="w-5 !rounded-none dark:hidden" title={v.lang} src={v.light} src={`${v.lang} Logo`} />
+          <img class="w-5 aspect-square !rounded-none hidden dark:inline-flex" title={v.lang} src={v.dark} alt={`${v.lang} Logo`} />
+          <img class="w-5 aspect-square !rounded-none dark:hidden" title={v.lang} src={v.light} alt={`${v.lang} Logo`} />
         )}
       </div>
       <span class="flex-grow font-mono uppercase tracking-widest font-bold transition-colors group-hover:text-amber-500 whitespace-nowrap text-ellipsis overflow-hidden">{response.data.name}</span>

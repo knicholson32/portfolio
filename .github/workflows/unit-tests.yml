@@ -120,8 +120,6 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
       - name: Build
         run: pnpm run build
       - name: Deploy
