@@ -13,9 +13,20 @@ let projects = (await getCollection("project")).sort(
 projects = projects.filter((p) => {
 	const projectID = p.data.project === undefined ? undefined : typeof p.data.project === 'string' ? p.data.project : p.data.project.id;
 	const useAsProjectPage = p.data.project === undefined ? undefined : typeof p.data.project === 'string' ? false : p.data.project.useAsProjectPage;
-	return (
-		projectID === undefined || useAsProjectPage === true
-	);
+
+	// If this post isn't the main project page, we may not include it.
+	if (useAsProjectPage === false) {
+		// Only include this if it is the only post in a project collection
+		for (const project of projects) {
+			const pid = project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? project.data.project : project.data.project.id;
+			const projectPage = project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? false : project.data.project.useAsProjectPage;
+			// We know we should include this project if we can't find a better project to include (IE. one that is the project page.)
+			if (pid !== undefined && pid === projectID && projectPage === true) return false;
+		}
+	}
+
+	// This post is the project page, or we could't find a reason not to display it.
+	return true;
 });
 
 const projectsWithRenderProps = await Promise.all(

@@ -36,7 +36,6 @@ export async function GET(context: APIContext) {
 		const post = p as CollectionEntry<'post'>;
 		// Get the `<Content/>` component for the current post.
 		post.body = post.body?.replace('client:idle', '') ?? '';
-		console.log(post.id);
 		try {
 			const { Content } = await render(post);
 			// Use the Astro container to render the content to a string.

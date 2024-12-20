@@ -23,9 +23,9 @@ const { title = "devlog" } = Astro.props;
 			>
 		</h2>
 		<div class="flex-grow"></div>
-		<a href="https://github.com/knicholson32" target="_blank" class="hidden xs:flex flex-shrink-0  flex-row items-center justify-center aspect-square gap-2 uppercase opacity-100 font-light">
-			<img class="h-5 my-0 aspect-square hidden dark:inline-flex" src={GithubDark.src} />
-			<img class="h-5 my-0 aspect-square dark:hidden" src={GithubLight.src} />
+		<a href="https://github.com/knicholson32" target="_blank" class="hidden xs:flex flex-shrink-0  flex-row items-center justify-center aspect-square gap-2 uppercase opacity-100 font-light" aria-label="See my GitHub account">
+			<img class="h-5 my-0 aspect-square hidden dark:inline-flex" src={GithubDark.src} alt="GitHub Logo"/>
+			<img class="h-5 my-0 aspect-square dark:hidden" src={GithubLight.src} alt="GitHub Logo"/>
 		</a>
 		<div class="hidden xs:block border-r border-neutral-200 dark:border-neutral-800"></div>
 		<div class="flex flex-row gap-2 uppercase opacity-100 font-light">
