@@ -6,9 +6,8 @@ import tailwind from '@astrojs/tailwind';
 import svelte from '@astrojs/svelte';
 import { loadEnv } from "vite";
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
-
-
 import compressor from 'astro-compressor';
+import robotsTxt from 'astro-robots-txt';
 
 
 const { PUBLIC_URL } = loadEnv(process.env.NODE_ENV ?? '', process.cwd(), "");
@@ -18,7 +17,7 @@ export default defineConfig({
   site: PUBLIC_URL,
   integrations: [mdx(), sitemap(), tailwind({
     applyBaseStyles: false
-  }), svelte(), compressor()],
+  }), svelte(), robotsTxt(), compressor()],
   output: 'static',
   markdown: {
     remarkPlugins: [remarkReadingTime],

@@ -92,8 +92,8 @@ const href = `https://github.com/${typeof repo === "string" ? BASE_GITHUB_USER :
     <div class="flex flex-row w-full items-center justify-start gap-2">
       <div class="hidden lg:flex flex-row items-center gap-2 border-r border-neutral-200 dark:border-neutral-800 pr-2">
         {langSrc.map((v) => 
-          <img class="w-5 !rounded-none hidden dark:inline-flex" title={v.lang} src={v.dark}/>
-          <img class="w-5 !rounded-none dark:hidden" title={v.lang} src={v.light} />
+          <img class="w-5 !rounded-none hidden dark:inline-flex" title={v.lang} src={v.dark} src={`${v.lang} Logo`} />
+          <img class="w-5 !rounded-none dark:hidden" title={v.lang} src={v.light} src={`${v.lang} Logo`} />
         )}
       </div>
       <span class="flex-grow font-mono uppercase tracking-widest font-bold transition-colors group-hover:text-amber-500 whitespace-nowrap text-ellipsis overflow-hidden">{response.data.name}</span>
@@ -102,7 +102,7 @@ const href = `https://github.com/${typeof repo === "string" ? BASE_GITHUB_USER :
   </div>
   <div class="hidden xl:block h-12 border-r flex-shrink-0 w-fit border-neutral-200 dark:border-neutral-800"></div>
   <div class="aspect-square flex-shrink-0">
-    <img class="h-6 lg:h-12 my-0 aspect-square hidden dark:inline-flex" src={GithubDark.src}/>
-    <img class="h-6 lg:h-12 my-0 aspect-square dark:hidden" src={GithubLight.src} />
+    <img class="h-6 lg:h-12 my-0 aspect-square hidden dark:inline-flex" src={GithubDark.src} alt="GitHub Logo" />
+    <img class="h-6 lg:h-12 my-0 aspect-square dark:hidden" src={GithubLight.src} alt="GitHub Logo" />
   </div>
 </a>
