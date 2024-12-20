@@ -12,16 +12,14 @@ const { minutesRead, project } = Astro.props;
 ---
 
 <div class="prose-a:no-underline prose-a:font-normal rounded-xl">
-  <a
-    href={`/project/${project.id}/`}
-    class="flex flex-col gap-0 justify-center"
-  >
+  <a href={`/project/${project.id}/`} class="flex flex-col gap-0 justify-center" aria-labelledby={`project-${project.id}-title`}>
     {
       project.data.image !== undefined && (
         <Picture
-          formats={["avif", "webp"]}
-          width={1024}
+          formats={["avif", "webp", "png"]}
           src={project.data.image.img}
+          widths={[240, 400, 800]}
+          sizes={`(min-width: 1360px) 400px, (min-width: 780px) 29.82vw, (min-width: 480px) calc(50vw - 28px), calc(100vw - 32px)`}
           style={`aspect-ratio: ${project.data.image.aspect ?? 2};`}
           class="object-cover rounded-lg m-0 mb-2"
           loading={"lazy"}
@@ -51,13 +49,14 @@ background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%
         </div>
       )
     }
-    <h1 class="mb-2 px-2 white text-left">{project.data.title}</h1>
-    <div
-      class="px-2 italic text-sm inline-flex gap-1 items-center overflow-x-hidden scrollbar-none"
-    >
+    <h1 class="mb-2 px-2 white text-left" id={`project-${project.id}-title`}>{project.data.title}</h1>
+    <div class="px-2 italic text-sm inline-flex gap-1 items-center overflow-x-hidden scrollbar-none">
       <div class="inline-flex gap-1 items-center whitespace-nowrap">
         <FormattedDate class="" date={project.data.pubDate} />
-        {minutesRead && <span class="text-xs text-neutral-500">•</span>}
+        {minutesRead && (
+          <span class="text-xs text-neutral-600 dark:text-neutral-400">•</span>
+          <span class="text-xs text-neutral-600 dark:text-neutral-400">{minutesRead}</span>
+        )}
       </div>
     </div>
     <!-- <div class="flex flex-row gap-1 py-2 overflow-x-scroll no-scrollbar">

@@ -98,7 +98,7 @@ projectRelatedShallow.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.v
 					}
 					{ projectRelatedShallow.length > 0 ?
 						<div class="mx-4 px-5 py-4 flex flex-col gap-2 justify-center border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
-							<div class="text-lg font-medium inline-flex items-center justify-between">Related Projects <span class="text-xs text-neutral-500 dark:text-neutral-500">({projectRelatedShallow.length})</span></div>
+							<div class="text-lg font-medium inline-flex items-center justify-between">Related Projects <span class="text-xs text-neutral-600 dark:text-neutral-400">({projectRelatedShallow.length})</span></div>
 							<div class="max-h-56 overflow-y-scroll flex flex-col gap-3">
 								{ projectRelatedShallow.map((project) => 
 									<a href={`/project/${project.id}`} target="_blank" class="group text-xs text-current no-underline">
@@ -126,7 +126,7 @@ projectRelatedShallow.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.v
 			<div class="mt-5 flex-grow xl:max-w-5xl w-full">
 				<ViewTransitionLimiter client:idle id={id}>
 					{data.image !== undefined ?
-						<Picture formats={["avif", "webp"]} width={1260} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
+						<Picture formats={["avif", "webp", "png"]} widths={[256, 512, 768, 1024, 1260, data.image.img.width]} sizes={`(min-width: 1640px) 1024px, (min-width: 1040px) calc(90.34vw - 440px), (min-width: 780px) calc(100vw - 280px), calc(100vw - 40px)`} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
 						: <div class="w-full h-12"></div>
 					}
 				</ViewTransitionLimiter>
