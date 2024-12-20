@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 		// If it isn't the project page, check some criteria
 		if (!projectPage) {
 			// Get the other posts in this project
-			const associatedProjects = projects.filter((project) => project.id !== id && pid === project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? project.data.project : project.data.project.id);
+			const associatedProjects = projects.filter((project) => project.id !== id && pid === (project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? project.data.project : project.data.project.id));
 			if (associatedProjects.length > 0) {
 				// There are other posts about this project, and this project isn't the main one. Make sure there is a project page.
 				const projectPages = associatedProjects.filter((project) => (project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? false : project.data.project.useAsProjectPage) === true);
