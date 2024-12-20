@@ -20,8 +20,10 @@ export async function getStaticPaths() {
 			if (associatedProjects.length > 0) {
 				// There are other posts about this project, and this project isn't the main one. Make sure there is a project page.
 				const projectPages = associatedProjects.filter((project) => (project.data.project === undefined ? undefined : typeof project.data.project === 'string' ? false : project.data.project.useAsProjectPage) === true);
-				if (projectPages.length === 0) throw new Error(`Projects must have a project page, or only 1 post. The project '${pid}' is invalid.`);
-				else if (projectPages.length > 1) throw new Error(`A project can only have 1 project page. The project '${pid}' has ${projectPages.length}.`);
+				if (projectPages.length === 0) {
+					console.log(pid, id, projectPage, JSON.stringify(projectPages.map((p) => ({ id: p.id, data: p.data }))));
+					throw new Error(`Projects must have a project page, or only 1 post. The project '${pid}' is invalid.`);
+				}	else if (projectPages.length > 1) throw new Error(`A project can only have 1 project page. The project '${pid}' has ${projectPages.length}.`);
 				
 			}
 		}

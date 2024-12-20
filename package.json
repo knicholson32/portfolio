@@ -23,6 +23,7 @@
     "@octokit/core": "^6.1.2",
     "@playwright/test": "^1.48.2",
     "astro": "^5.0.8",
+    "astro-compressor": "^1.0.0",
     "lucide-astro": "^0.460.0",
     "lucide-svelte": "^0.460.0",
     "mdast-util-to-string": "^4.0.0",
