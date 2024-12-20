@@ -126,7 +126,7 @@ projectRelatedShallow.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.v
 			<div class="mt-5 flex-grow xl:max-w-5xl w-full">
 				<ViewTransitionLimiter client:idle id={id}>
 					{data.image !== undefined ?
-						<Picture formats={["avif", "webp", "jpeg"]} widths={[256, 512, 768, 1024, 1260, 2520]} sizes={`(min-width: 1640px) 1024px, (min-width: 1040px) calc(90.34vw - 440px), (min-width: 780px) calc(100vw - 280px), calc(100vw - 40px)`} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
+						<Picture formats={["avif", "webp", "jpeg"]} fallbackFormat="jpeg" widths={[256, 512, 768, 1024, 1260, 2520]} sizes={`(min-width: 1640px) 1024px, (min-width: 1040px) calc(90.34vw - 440px), (min-width: 780px) calc(100vw - 280px), calc(100vw - 40px)`} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
 						: <div class="w-full h-12"></div>
 					}
 				</ViewTransitionLimiter>

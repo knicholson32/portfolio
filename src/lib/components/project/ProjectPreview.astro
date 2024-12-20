@@ -17,6 +17,7 @@ const { minutesRead, project } = Astro.props;
       project.data.image !== undefined && (
         <Picture
           formats={["avif", "webp", "jpeg"]}
+          fallbackFormat="jpeg"
           src={project.data.image.img}
           widths={[240, 400, 800]}
           sizes={`(min-width: 1360px) 400px, (min-width: 780px) 29.82vw, (min-width: 480px) calc(50vw - 28px), calc(100vw - 32px)`}
