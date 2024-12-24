@@ -81,8 +81,8 @@ projectRelatedShallow.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.v
 			{ projectRelated.length !== 0 || postRelated.length !== 0 || projectRelatedShallow.length !== 0 ? 
 				<div class="fixed top-0 w-60 xl:w-[calc(max(100vw/2-26rem-8rem,15rem))] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] bg-neutral-50 dark:bg-neutral-950 overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800 flex flex-col gap-4 py-4" style="">
 					<div class="mx-4 px-5 py-4 flex flex-col gap-2 justify-center border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
-						<div class="text-justify font-serif font-bold capitalize text-xl whitespace-nowrap">{project}</div>
-						<div class="text-justify text-xs text-neutral-600 dark:text-neutral-400">{primaryProjectPost?.description ?? data.description}</div>
+						<div class="font-serif font-bold capitalize text-xl">{project?.replaceAll('-', ' ')}</div>
+						<div style="word-spacing:-1px;" class="text-justify text-xs text-neutral-600 dark:text-neutral-400">{primaryProjectPost?.description ?? data.description}</div>
 					</div>
 					<ProjectRelationsSidebar relations={projectRelated} chapterOrder={order} id={id} />
 					{ postRelated.length > 0 ?
