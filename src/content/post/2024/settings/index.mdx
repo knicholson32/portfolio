@@ -1,0 +1,85 @@
+---
+title: Efficient Settings with Prisma and TypeScript
+shortTitle: Settings
+id: prisma-settings
+description: A look at how to use TypeScript generics to make settings more efficient with Prisma.
+pubDate: Dec 24 2024
+image: 
+  img: './images/photo-1611914974124-466c45d4c7a5.avif'
+  alt: An image of a prism
+  aspect: 2
+related:
+  - contour
+tags:
+  - TypeScript
+  - Prisma
+---
+
+Since Contour is always getting updated with new features, and because database schema updates are a pain, I wanted to find a way to allow typescript to do the heavy lifting with respect to settings.
+
+Many settings systems are very closely tied to the database schema (IE. a `settings` database table), or they are complexly detached from proper typing support (IE. an `env` file). I wanted to find a middle ground that would allow for easy expansion and easy typing, so I decided to learn a bit more about type generics in Typescript.
+
+## Generics
+
+TypeScript, like many other languages, supports generics, which allow for assigning type at 'runtime'. Since TypeScript is just layered on top of JavaScript, 'runtime' isn't really the right word for when the types are assigned, but it's close enough. 
+
+```typescript
+// A basic generic type definition
+type MyGeneric<T> = {
+  value: T;
+}
+
+const myNumber: MyGeneric<number> = {
+  value: 5
+}
+
+const myString: MyGeneric<string> = {
+  value: 'my string'
+}
+```
+
+When using these variables, TypeScript (and therefore the IDE) will know that `myString.value` is a string, and `myNumber.value` is a number. Though a very simple example, this allows for some pretty complex type definitions that can stack in interesting ways.
+
+## Implementation
+
+I wanted settings to be accessible efficiently during runtime, or rather, I didn't want my fancy settings system to adjust how settings are actually pulled from the database. 
+
+The database table itself is very simple, just `setting` and `value` columns: 
+
+```prisma
+model Settings {
+  setting String @id
+  value   String
+
+  @@map("settings")
+}
+```
+
+Settings can be easily fetched in parallel, either by individual name or by a grouping, by using `prisma` operations directly:
+
+```typescript
+// Multiple settings fetched at the same time by name:
+const myParallelSettings = await prisma.settings.findMany({
+  where: {
+    setting: {
+      in: ['setting1', 'setting2', 'setting3']
+    }
+  }
+});
+
+// Multiple settings fetched at the same time by grouping:
+const myGroupedSettings = await prisma.settings.findMany({
+  where: {
+    setting: {
+      startsWith: 'my.settings.group'
+    }
+  }
+});
+
+```
+
+This is great, and is exactly how I wanted settings to be fetched, but `prisma` has no idea what the settings are, or what they should be. This is where generics (and a little bit of setup) come in.
+
+## Usage
+
+

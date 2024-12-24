@@ -1,0 +1,167 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseHead from "@components/BaseHead.astro";
+import BaseHTML from "@layouts/BaseHTML.astro";
+import { Picture } from "astro:assets";
+import FormattedDate from "@components/FormattedDate.astro";
+import Tag from "@components/Tag.astro";
+import ViewTransitionLimiter from "@components/svelte/ViewTransitionLimiter.svelte";
+import TableOfContents from "@components/svelte/decorations/TableOfContents.svelte";
+import { SITE_TITLE } from "@consts";
+import { ChevronLeft, ChevronRight } from "lucide-astro";
+import type { MarkdownHeading } from "astro";
+import ProjectRelationsSidebar from "@components/project/ProjectRelationsSidebar.astro";
+import UnderlineHover from "@components/decorations/UnderlineHover.astro";
+
+type Props = {
+	minutesRead: string | undefined;
+	id: string,
+	headings: MarkdownHeading[];
+	data: CollectionEntry<"post">["data"];
+};
+
+const {
+	minutesRead,
+	id,
+	headings,
+	data,
+} = Astro.props;
+
+const aspectRatio =
+	data.image.aspect === undefined ? "" : `aspect-ratio: ${data.image.aspect};`;
+
+const allPosts = (await getCollection("post")).sort(
+	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
+);
+
+const currentPostIndex = allPosts.findIndex((p) => p.id === id);
+let projectRelated: { data: (CollectionEntry<'project'>)['data'], id: string }[] = [];
+
+let order: string[] = [];
+
+if (data.related !== undefined) {
+	projectRelated = (await getCollection("project")).filter((p) => data.related?.includes((p.data.project === undefined ? undefined : typeof p.data.project === 'string' ? undefined : p.data.project.id) ?? '') && (typeof p.data.project !== 'string' && p.data.project.useAsProjectPage === true)).flatMap((p) => { return { data: p.data, id: p.id } } );
+
+	projectRelated.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+}
+
+---
+
+<BaseHTML includeFooter={false}>
+	<BaseHead slot="header" title={data.title + ' | ' + SITE_TITLE} description={data.description} image={data.image.img.src} type="article"
+	/>
+	<!-- <article class="w-full max-w-2xl p-4 relative">
+		<ViewTransitionLimiter client:idle id={id}>
+			<Picture formats={["avif", "webp"]} width={1024} src={data.image.img} style={aspectRatio} class="object-cover z-10" loading={"eager"} alt="Cover image" 
+			/>
+		</ViewTransitionLimiter>
+		<div class="">
+			<div class="title">
+				<h1 class="mb-2 text-xl xs:text-3xl sm:text-4xl">{data.title}</h1>
+				<div class="flex flex-row items-center gap-1 whitespace-nowrap">
+					<FormattedDate date={data.pubDate} />
+					<div class="hidden sm:inline-flex gap-1 items-center">{
+						data.pubDate && (
+							<span>•</span>
+							<div class="text-xs italic">
+								Updated <FormattedDate date={data.pubDate} />
+							</div>
+						)
+					}</div>
+					{minutesRead !== undefined ? <span>•</span><span class="text-xs italic">{minutesRead}</span> : ""}
+					<div class="flex-grow"></div>
+					<div class="inline-flex gap-1 items-center overflow-x-scroll no-scrollbar">{ data.tags && data.tags.map((d) => <Tag tag={d}/>) }</div>
+				</div>
+				<hr class="py-0 mt-4 mb-2 border-neutral-200 dark:border-neutral-800" />
+			</div>
+			<slot />
+		</div>
+	</article> -->
+
+
+	<article class="flex flex-row gap-5 items-start w-full">
+
+		<aside class="hidden md:block relative flex-shrink-0 h-[100vh] w-60">
+			{ projectRelated.length !== 0 ? 
+				<div class="fixed top-0 w-60 xl:w-[calc(max(100vw/2-26rem-8rem,15rem))] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] bg-neutral-50 dark:bg-neutral-950 overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800 flex flex-col gap-4 py-4" style="">
+					{ projectRelated.length > 0 ?
+						<div class="mx-4 px-5 py-4 flex flex-col gap-2 justify-center border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
+							<div class="text-lg font-medium inline-flex items-center justify-between">Related Projects <span class="text-xs text-neutral-500 dark:text-neutral-500">({projectRelated.length})</span></div>
+							<div class="max-h-56 overflow-y-scroll flex flex-col gap-3">
+								{ projectRelated.map((post) => 
+									<a href={`/post/${post.id}`} target="_blank" class="group text-xs text-current no-underline"><UnderlineHover class="text-sm font-medium text-amber-500">{post.data.title}</UnderlineHover> - <span><FormattedDate class="" date={post.data.pubDate} /></span><br/><span class="text-xxs" set:html={post.data.description}></span></a>
+								)}
+							</div>
+						</div>
+						: ""
+					}
+				</div>
+				:
+				<div class="fixed top-0 w-60 xl:w-[calc(100vw/2-26rem)] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800" style=""></div>
+			}
+		</aside>
+
+		<!-- Right Content -->
+		<div class="w-[calc(100vw-6rem)] relative flex-grow flex flex-col-reverse lg:flex-row gap-2 lg:gap-5 justify-center pl-5 md:pl-0 pr-5 lg:mr-60">
+			
+			<!-- Main Content -->
+			<div class="mt-5 flex-grow xl:max-w-5xl w-full">
+				<ViewTransitionLimiter client:idle id={id}>
+					{data.image !== undefined ?
+						<Picture formats={["avif", "webp", "jpeg"]} fallbackFormat="jpeg" widths={[256, 512, 768, 1024, 1260, 2520]} sizes={`(min-width: 1640px) 1024px, (min-width: 1040px) calc(90.34vw - 440px), (min-width: 780px) calc(100vw - 280px), calc(100vw - 40px)`} src={data.image.img} style={aspectRatio} class="mb-0 object-cover z-10" loading={"eager"} alt="Cover image" />
+						: <div class="w-full h-12"></div>
+					}
+				</ViewTransitionLimiter>
+				<div class="title relative flex flex-row items-center">
+					<div>
+						<h1 id="overview" class="mb-2 text-xl xs:text-3xl sm:text-4xl scroll-m-96">{data.title}</h1>
+						<div class="flex flex-row items-center gap-1 whitespace-nowrap">
+							<FormattedDate date={data.pubDate} />
+							<div class="hidden sm:inline-flex gap-1 items-center">{
+								data.pubDate && (
+									<span>•</span>
+									<div class="text-xs italic">
+										Updated <FormattedDate date={data.pubDate} />
+									</div>
+								)
+							}</div>
+							{minutesRead !== undefined ? <span>•</span><span class="text-xs italic">{minutesRead}</span> : ""}
+							<div class="flex-grow"></div>
+						</div>
+						{data.tags && <div class="inline-flex gap-1 items-center overflow-x-scroll no-scrollbar">{ data.tags && data.tags.map((d) => <Tag tag={d}/>) }</div> }
+					</div>
+				</div>
+				<hr class="py-0 mt-2 mb-2 border-neutral-200 dark:border-neutral-800" />
+				
+				<slot />
+			</div>
+
+			<!-- Right Sidebar -->
+			<aside class="sticky left-0 right-0 top-[calc(4rem-3px)] bg-neutral-50 dark:bg-neutral-950 -mx-5 lg:mx-0 h-8 lg:h-auto lg:relative lg:overflow-hidden border-b lg:border-b-0 border-neutral-200 dark:border-neutral-800">
+				<div class="flex items-center justify-center w-full h-full lg:block lg:fixed lg:top-0 lg:h-[100vh] lg:w-60 xl:w-[calc(100vw/2-26rem)] overflow-y-auto overflow-x-hidden scrollbar-none lg:pt-[4.5rem] xl:pt-[5.5rem] lg:pl-5 lg:border-l border-neutral-200 dark:border-neutral-800" style="">
+					{headings.length > 0 &&
+						<TableOfContents headings={headings} client:idle />
+					}
+				</div>
+			</aside>
+		</div>
+	</article>
+
+
+	<div class="relative w-full px-3 pb-3 lg:px-0 lg:pb-0 lg:w-auto lg:fixed lg:bottom-3 lg:left-3 lg:right-3 flex flex-row justify-between">
+		{currentPostIndex !== 0 ?
+			<a href={`/post/${allPosts[currentPostIndex - 1].id}`} class="inline-flex items-center gap-2 bg-neutral-800 rounded-lg pl-2 pr-4 py-2 no-underline text-current select-none group">
+				<ChevronLeft class="w-4 h-4 group-hover:text-amber-500"/>
+				Previous <span class="hidden sm:block lg:hidden xl:block">Post</span>
+			</a>
+			:
+			<div></div>
+		}
+		{currentPostIndex < allPosts.length - 1 && 
+			<a href={`/post/${allPosts[currentPostIndex + 1].id}`} class="inline-flex items-center gap-2 mx-3 bg-neutral-800 rounded-lg pr-2 pl-4 py-2 no-underline text-current select-none group">
+				Next <span class="hidden sm:block lg:hidden xl:block">Post</span>
+				<ChevronRight class="w-4 h-4 group-hover:text-amber-500"/>
+			</a>
+		}
+	</div>
+</BaseHTML>
