@@ -81,7 +81,8 @@ if (data.related !== undefined) {
 
 	<article class="flex flex-row gap-5 items-start w-full">
 
-		<aside class="hidden md:block relative flex-shrink-0 h-[100vh] w-60">
+		<!-- Left Content -->
+		<aside class=`${projectRelated.length === 0 ? 'hidden lg:block w-0 xl:w-60' : 'hidden md:block w-60'} relative flex-shrink-0 h-[100vh] w-60`>
 			{ projectRelated.length !== 0 ? 
 				<div class="fixed top-0 w-60 xl:w-[calc(max(100vw/2-26rem-8rem,15rem))] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] bg-neutral-50 dark:bg-neutral-950 overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800 flex flex-col gap-4 py-4" style="">
 					{ projectRelated.length > 0 ?
@@ -97,12 +98,12 @@ if (data.related !== undefined) {
 					}
 				</div>
 				:
-				<div class="fixed top-0 w-60 xl:w-[calc(100vw/2-26rem)] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800" style=""></div>
+				<div class="fixed top-0 w-60 xl:w-[calc(max(100vw/2-26rem-8rem,15rem))] max-w-xs h-[calc(100vh-4rem+3px)] xl:h-[calc(100vh-5rem+3px)] overflow-y-auto overflow-x-hidden mt-[calc(4rem-3px)] xl:mt-[calc(5rem-3px)] border-r border-neutral-200 dark:border-neutral-800 flex flex-col gap-4 py-4" style=""></div>
 			}
 		</aside>
 
 		<!-- Right Content -->
-		<div class="w-[calc(100vw-6rem)] relative flex-grow flex flex-col-reverse lg:flex-row gap-2 lg:gap-5 justify-center pl-5 md:pl-0 pr-5 lg:mr-60">
+		<div class={`w-[calc(100vw-6rem)] relative flex-grow flex flex-col-reverse lg:flex-row gap-2 lg:gap-5 justify-center ${projectRelated.length === 0 ? 'px-5 lg:pl-0' : 'pl-5 md:pl-0 pr-5'} lg:mr-60`}>
 			
 			<!-- Main Content -->
 			<div class="mt-5 flex-grow xl:max-w-5xl w-full">
@@ -137,7 +138,7 @@ if (data.related !== undefined) {
 			</div>
 
 			<!-- Right Sidebar -->
-			<aside class="sticky left-0 right-0 top-[calc(4rem-3px)] bg-neutral-50 dark:bg-neutral-950 -mx-5 lg:mx-0 h-8 lg:h-auto lg:relative lg:overflow-hidden border-b lg:border-b-0 border-neutral-200 dark:border-neutral-800">
+			<aside class={`${headings.length > 0 ? 'sticky' : 'hidden lg:block'} left-0 right-0 top-[calc(4rem-3px)] bg-neutral-50 dark:bg-neutral-950 -mx-5 lg:mx-0 h-8 lg:h-auto lg:relative lg:overflow-hidden border-b lg:border-b-0 border-neutral-200 dark:border-neutral-800`}>
 				<div class="flex items-center justify-center w-full h-full lg:block lg:fixed lg:top-0 lg:h-[100vh] lg:w-60 xl:w-[calc(100vw/2-26rem)] overflow-y-auto overflow-x-hidden scrollbar-none lg:pt-[4.5rem] xl:pt-[5.5rem] lg:pl-5 lg:border-l border-neutral-200 dark:border-neutral-800" style="">
 					{headings.length > 0 &&
 						<TableOfContents headings={headings} client:idle />
