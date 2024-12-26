@@ -36,27 +36,6 @@ In this example, settings are stored as a key-value pair, with the `value` alway
 
 We can do better by adding a system to manage our settings that is both efficient and type-safe, and ultimately uses the same simple `prisma` schema from above.
 
-## Generics
-
-TypeScript, like many other languages, supports generics, which allow for assigning type at 'runtime'. Since TypeScript is just layered on top of JavaScript, 'runtime' isn't really the right word for when the types are assigned, but it's close enough. 
-
-```typescript
-// A basic generic type definition
-type MyGeneric<T> = {
-  value: T;
-}
-
-const myNumber: MyGeneric<number> = {
-  value: 5
-}
-
-const myString: MyGeneric<string> = {
-  value: 'my string'
-}
-```
-
-When using these variables, TypeScript (and therefore the IDE) will know that `myString.value` is a string, and `myNumber.value` is a number. Though a very simple example, this allows for some pretty complex type definitions that can stack in interesting ways.
-
 
 ## Application Considerations
 
@@ -91,43 +70,82 @@ This ease of use and efficiency is something I wanted to preserve in my settings
 
 When new settings are implemented for use with new application logic, deployed database instances will not have these settings stored. As a result, the application must have default values handy. If a setting is not found in the database, the default value will be used and stored back to the database for next use.
 
-## Usage
+## Generics
 
-### Load by Group/Set
-
-```typescript
-// The IDE knows which setting sets are available
-const entrySettings = await settings.getSet('entry');
-```
-
-### Load by Name
+TypeScript, like many other languages, supports generics, which allow for assigning type at 'runtime'. Since TypeScript is just layered on top of JavaScript, 'runtime' isn't really the right word for when the types are assigned, but it's close enough. 
 
 ```typescript
-// The IDE knows which individual settings are available
-const entrySettings = await settings.get('setting1');
+// A basic generic type definition
+type MyGeneric<T> = {
+  value: T;
+}
+
+const myNumber: MyGeneric<number> = {
+  value: 5
+}
+
+const myString: MyGeneric<string> = {
+  value: 'my string'
+}
 ```
 
-### Load Many by Name
+When using these variables, TypeScript (and therefore the IDE) will know that `myString.value` is a string, and `myNumber.value` is a number. Though a very simple example, this allows for some pretty complex type definitions that can stack in interesting ways.
+
+### Applying Typing to Settings Retrieval
+
+In our settings system, we can use generics to define the types of our settings. This will allow us to define the types of our settings in a single place, and have the IDE know what the types are when we access them. We can imagine a function that uses generics, but the actual return type is calculated _based on the requested setting_.
 
 ```typescript
-// The IDE knows which individual settings are available
-const entrySettings = await settings.getMany('setting1', 'setting2', 'setting3');
+const get = <T extends TypeName>(setting: T): ObjectType<T> => {
+  // Get and return the setting from the DB
+}
 ```
 
-### Assignment
+This function uses the generic `T` to set the return type of the function. We need to define `TypeName` (a type consisting of every setting name) and `ObjectType` (a type generic that can associate the setting name with the setting return type) to make this work:
 
 ```typescript
-// The IDE knows which individual settings are available,
-// and what the assignment types should be for each
-await settings.set('setting1', 'new value');
-await settings.set('setting2', false);
-await settings.set('setting3', 42);
+// Specify the names of all possible settings
+type TypeName = 'my.setting.1' | 'my.setting.2' | 'my.setting.3';
+
+// Assign each setting a return type
+export type ObjectType<T extends TypeName> = 
+  T extends 'my.setting.1' ? string :
+  T extends 'my.setting.2' ? number :
+  T extends 'my.setting.3' ? boolean :
+  string;
+
 ```
 
+Now TypeScript knows what settings are valid inputs, and what the return type will be:
+
+```typescript
+// IDE knows that s1 is a string, and can provide autocompletion
+const s1 = settings.get('my.setting.1');
+```
+
+### Retrieving Many Settings
+
+Our current method is great for getting a single setting, but will be very inefficient for getting multiple settings:
+
+```typescript
+const s1 = settings.get('my.setting.1'); // DB interaction
+const s2 = settings.get('my.setting.2'); // DB interaction
+const s3 = settings.get('my.setting.3'); // DB interaction
+```
+
+We want to be able to get all of these settings in _one_ DB call. Lets make another getter function:
+
+```typescript
+const getMany = <T extends TypeName>(...settings: T[]): { [K in FilterSettingsMany<TypeName, T>]: ObjectType<K> } => {
+  // Get and return the settings from the DB
+}
+```
+
+Lets break down how this works.
 
 ## Full Implementation
 
-`Prisma` Schema:
+### `Prisma` Schema
 ```prisma
 model Settings {
   setting String @id
@@ -137,7 +155,7 @@ model Settings {
 }
 ```
 
-`settings.ts`:
+### `settings.ts` File
 ```typescript
 import prisma from '$lib/server/prisma';
 import type { Prisma } from '@prisma/client';
@@ -156,21 +174,21 @@ export enum MyEnum {
 // Default Values
 export const DefaultValues = {
   'general.string': 'default string',
-	'general.integer': 42,
+  'general.integer': 42,
   'general.float': 3.14159,
-	'general.boolean': true,
-	'general.enum': MyEnum.NOT_STARTED,
+  'general.boolean': true,
+  'general.enum': MyEnum.NOT_STARTED,
 };
 export type TypeName = keyof typeof DefaultValues;
 
 // Setting Type Definitions
 export type ObjectType<T extends TypeName> = 
-	T extends 'general.string' ? string :
-	T extends 'general.integer' ? number :
+  T extends 'general.string' ? string :
+  T extends 'general.integer' ? number :
   T extends 'general.float' ? number :
   T extends 'general.boolean' ? boolean :
-	T extends 'general.enum' ? MyEnum :
-	string;
+  T extends 'general.enum' ? MyEnum :
+  string;
 
 // -------------------------------------------------------------------------------------------------
 // Setting Functions
@@ -320,6 +338,39 @@ export const set = async <T extends TypeName>(setting: T, value: ObjectType<T>) 
 		where: { setting }
 	});
 };
+```
+
+### Usage
+
+#### Load by Group/Set
+
+```typescript
+// The IDE knows which setting sets are available
+const entrySettings = await settings.getSet('entry');
+```
+
+#### Load by Name
+
+```typescript
+// The IDE knows which individual settings are available
+const entrySettings = await settings.get('setting1');
+```
+
+#### Load Many by Name
+
+```typescript
+// The IDE knows which individual settings are available
+const entrySettings = await settings.getMany('setting1', 'setting2', 'setting3');
+```
+
+#### Assignment
+
+```typescript
+// The IDE knows which individual settings are available,
+// and what the assignment types should be for each
+await settings.set('setting1', 'new value');
+await settings.set('setting2', false);
+await settings.set('setting3', 42);
 ```
 
 
